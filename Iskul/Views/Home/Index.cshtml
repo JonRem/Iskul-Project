@@ -1,0 +1,102 @@
+﻿@model Iskul_Models.ViewModels.HomeVM
+@using System.Web
+@*@(Html.HiddenFor(model => Model.SearchCategory))*@
+
+<div class="container">
+    @*Debugging this portion for the search box in home page  *@
+    @*<div class="text-center">*@
+    @*<form method="post" asp-action="FindProduct">
+            <div class="input-group">
+                <input class="form-control" asp-controller="Home" asp-for="SearchProduct" />
+                <div class="input-group-append">
+                    <button type="submit" class="=btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>*@
+
+    <input class="form-control" id="txtInputAnything" type="text" placeholder="Search Here ..." />
+
+
+    <div class="text-center">
+        <button class="btn btn-dark filter-button" data-filter="all">All</button>
+        @foreach (var obj in Model.Categories)
+        {
+            <button class="btn-outline-secondary filter-button" data-filter="@obj.Name.Replace(' ','_')">
+                @obj.Name
+            </button>
+        }
+    </div>
+    <br />
+    @*<input id="txtSearch" class="filter" placeholder="filter" />*@
+
+    <div id="myWeb" class="row">
+        @if (Model.Schools.Count() > 0)
+        {
+            @foreach (var schl in Model.Schools)
+            {
+                <partial name="_IndividualSchoolCard" model="schl" />
+                //display all Schools
+            }
+        }
+        else
+        {
+            <p> No School found for search criteria.</p>
+        }
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            //$("#txtSearch").on("keyup", function () {
+            //    var input = $(this).val().toUpperCase();
+
+            //    $(".card").each(function () {
+            //        if ($(this).data("string").toUpperCase().indexOf(input) < 0) {
+            //            $(this).hide();
+            //        } else {
+            //            $(this).show();
+            //        }
+            //    })
+            //});
+
+            $("#txtInputAnything").on("keyup", function () {
+                var value1 = $(this).val().toLowerCase();
+                $("#myWeb .card").filter(function () {
+                   // $(this).toggle($(this).text().toLowerCase().indexOf(value1) > -1)
+                    if ($(this).text().toLowerCase().indexOf(value1) > -1) {
+                        $(this).show();
+                    }
+                    else {
+                        $(this).hide();
+
+                    }
+
+
+                });
+            });
+
+            $(".filter-button").click(function () {
+                var value = $(this).attr('data-filter');
+                //alert("Filter: " + value);
+                ////$("#SearchCategory").val() = value;
+                //var value2 = $("#SearchCategory").val();
+                //alert(value2);
+
+
+                if (value == "all") {
+                    $('.filter').show('1000');
+                }
+                else {
+                    $(".filter").not('.' + value).hide('3000');
+                    $('.filter').filter('.' + value).show('3000');
+
+                }
+            });
+
+        });
+
+    </script>
+}

@@ -1,0 +1,108 @@
+School table
+Id
+SchoolName		250
+SchoolAddress		250
+ContactNumber		15
+SchoolEmail		100
+Photo			250
+Notes	
+
+Enroll Header Table
+Id
+ApplicationUser
+EnrollDate		Date
+PhoneNo			15
+First Name		250
+Last Name		250
+Email			250
+
+Enroll Detail Table
+Id
+Enroll Header Id
+School Id
+DateofBirth		Date
+Address			250
+Contact Number		15
+Gender			X(1)
+CivilStatus		X(1)
+Nationality		250
+ConsentForm	
+Photo
+Emergency Contact Person
+Emergency Contact Number
+
+Registration table
+Id
+LastName			100
+FirstName		100
+MiddleName		100
+DateofBirth		Date
+Address			250
+MobileNo			15
+DateofRegistration		Date
+Gender			X(1)
+CivilStatus		X(1)
+MemberStatus		X(1)  active/inactive/expelled/lifetime member
+MemberDegree		100
+Photo			250		
+
+Registration Changes Log
+Id
+LastName			100
+FirstName		100
+MiddleName		100
+DateofChanges		Date
+AddressChange		250
+MobileNoChange		15
+DateofLastRegistration	Date - if re-instated
+CivilStatus		X(1)
+MemberStatus		X(1)
+MemberDegree		100
+PhotoChanges		250
+Notes			500
+
+Paymets Header table
+Id
+DatePaid			Date
+
+Payments Detail table	
+Id
+DatePaid			Date
+ReceiptNo		15
+Amount			9(6)V99
+PaidUntil			Date
+PaymentMethod		20
+ReceivingAgent		100
+
+Member Lessons Table
+Id
+PaidUntil			Date
+DegreeId			9(2)
+LessonNo			9(3)
+
+Member Payments Table
+Id
+PaymentDate		Date
+PaidUntil			Date
+ReceiptNo		15
+Notes			250
+
+Lessons Table
+Id (degreeId)
+LessonId			9(3) (auto)
+LessonPDFPath		250
+Notes			250
+
+Degree Header table
+Id
+DegreeName		100
+TotalLessons		9(3)
+Notes			250
+
+Degree Detail table
+Id
+LessonId			auto
+LessonPDFPath		250
+Notes			250
+
+

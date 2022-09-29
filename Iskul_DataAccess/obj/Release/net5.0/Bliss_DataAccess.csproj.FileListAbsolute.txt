@@ -1,0 +1,17 @@
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\bin\Release\net5.0\Bliss_DataAccess.deps.json
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\bin\Release\net5.0\Bliss_DataAccess.dll
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\bin\Release\net5.0\ref\Bliss_DataAccess.dll
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\bin\Release\net5.0\Bliss_DataAccess.pdb
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\bin\Release\net5.0\Bliss_Models.dll
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\bin\Release\net5.0\Bliss_Utility.dll
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\bin\Release\net5.0\Bliss_Models.pdb
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\bin\Release\net5.0\Bliss_Utility.pdb
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\obj\Release\net5.0\Bliss_DataAccess.csproj.AssemblyReference.cache
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\obj\Release\net5.0\Bliss_DataAccess.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\obj\Release\net5.0\Bliss_DataAccess.AssemblyInfoInputs.cache
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\obj\Release\net5.0\Bliss_DataAccess.AssemblyInfo.cs
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\obj\Release\net5.0\Bliss_DataAccess.csproj.CoreCompileInputs.cache
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\obj\Release\net5.0\Bliss_DataAccess.csproj.CopyComplete
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\obj\Release\net5.0\Bliss_DataAccess.dll
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\obj\Release\net5.0\ref\Bliss_DataAccess.dll
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\obj\Release\net5.0\Bliss_DataAccess.pdb

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Bliss_DataAccess</id>
+    <version>1.0.0</version>
+    <authors>Bliss_DataAccess</authors>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework="net5.0">
+        <dependency id="Bliss_Models" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="Bliss_Utility" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Identity.EntityFrameworkCore" version="5.0.10" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore" version="5.0.10" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.Relational" version="5.0.10" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.SqlServer" version="5.0.10" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Bliss Project\Bliss_DataAccess\bin\Release\net5.0\Bliss_DataAccess.dll" target="lib\net5.0\Bliss_DataAccess.dll" />
+  </files>
+</package>
