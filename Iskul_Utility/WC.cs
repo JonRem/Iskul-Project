@@ -31,11 +31,15 @@ namespace Iskul_Utility
         public const string StatusShipped = "Shipped";
         public const string StatusCancelled = "Cancelled";
         public const string StatusRefunded = "Refunded";
+        public const string StatusDisapproved = "Disapproved";
+        public const string StatusSaved = "Saved";
 
         public static readonly IEnumerable<string> listStatus = new ReadOnlyCollection<string>(
             new List<string>
             {
                 StatusApproved, StatusCancelled, StatusInProcess, StatusPending, StatusRefunded, StatusShipped
             });
+
+        
     }
 }

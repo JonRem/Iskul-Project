@@ -76,7 +76,6 @@ C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\bin\Debug\net5.
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\bin\Debug\net5.0\Iskul.runtimeconfig.json
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\bin\Debug\net5.0\Iskul.runtimeconfig.dev.json
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\bin\Debug\net5.0\Iskul.dll
-C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\bin\Debug\net5.0\ref\Iskul.dll
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\bin\Debug\net5.0\Iskul.pdb
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\bin\Debug\net5.0\refs\Microsoft.AspNetCore.Antiforgery.dll
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\bin\Debug\net5.0\refs\Microsoft.AspNetCore.Authentication.Abstractions.dll
@@ -500,3 +499,4 @@ C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\obj\Debug\net5.
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\obj\Debug\net5.0\Razor\Views\School\Upsert.cshtml.g.cs
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\obj\Debug\net5.0\Razor\Views\Shared\_IndividualSchoolCard.cshtml.g.cs
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\obj\Debug\net5.0\Razor\Views\Enroll\Index.cshtml.g.cs
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\obj\Debug\net5.0\refint\Iskul.dll

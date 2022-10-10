@@ -1,6 +1,5 @@
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_Utility\bin\Debug\net5.0\Iskul_Utility.deps.json
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_Utility\bin\Debug\net5.0\Iskul_Utility.dll
-C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_Utility\bin\Debug\net5.0\ref\Iskul_Utility.dll
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_Utility\bin\Debug\net5.0\Iskul_Utility.pdb
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_Utility\obj\Debug\net5.0\Iskul_Utility.csproj.AssemblyReference.cache
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_Utility\obj\Debug\net5.0\Iskul_Utility.GeneratedMSBuildEditorConfig.editorconfig
@@ -10,3 +9,4 @@ C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_Utility\obj\Deb
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_Utility\obj\Debug\net5.0\Iskul_Utility.dll
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_Utility\obj\Debug\net5.0\ref\Iskul_Utility.dll
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_Utility\obj\Debug\net5.0\Iskul_Utility.pdb
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_Utility\obj\Debug\net5.0\refint\Iskul_Utility.dll

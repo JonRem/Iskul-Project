@@ -26,11 +26,26 @@ namespace Iskul_Models
         public School School { get; set; }
 
         [Required]
+        [Display(Name ="Log Date")]
+        public DateTime LogDate { get; set; }
+
+        [Required]
         [Display(Name = "Date of Birth")]
         public DateTime DateofBirth { get; set; }
+
         [Required]
-        [Display(Name = "Address")]
+        [Display(Name = "Street Address - House/Unit No.")]
         public string Address { get; set; }
+        [Required]
+        [Display(Name = "City")]        
+        public string City { get; set; }
+        [Required]
+        [Display(Name =  "Province")]
+        public string Province { get; set; }
+        [Required]
+        [Display(Name = "Zip Code")]
+        public string ZipCode { get; set; }
+
         [Required]
         [Display(Name = "True Contact Number")]
         public string ContactNumber { get; set; }
@@ -51,7 +66,7 @@ namespace Iskul_Models
         public string ConsentForm { get; set; }
 
         [Required]
-        [Display(Name = "Schoo lProfile Photo")]
+        [Display(Name = "School Profile Photo")]
         public byte SchoolPhoto { get; set; }
         [Required]
         [Display(Name = "Emergency Contact Person")]
@@ -59,5 +74,7 @@ namespace Iskul_Models
         [Required]
         [Display(Name = "Emergency Contact Number")]
         public string EmergencyContactNo { get; set; }
+        public string EnrollStatus { get; set; }  // Saved, Pending, Approved, Processing, Cancelled, Disapproved
+        
     }
 }

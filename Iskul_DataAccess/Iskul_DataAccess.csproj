@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Iskul_Utility\Iskul_Utility.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

@@ -30,6 +30,9 @@ ConsentForm
 Photo
 Emergency Contact Person
 Emergency Contact Number
+Status
+SavedforLater
+
 
 Registration table
 Id
