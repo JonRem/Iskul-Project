@@ -35,6 +35,7 @@ namespace Iskul.Controllers
 
         [BindProperty]
         public EnrollUserVM EnrollUserVM { get; set; }
+        
         public EnrollController(IEnrollHeaderRepository enrollHeaderRepo, 
             IEnrollDetailRepository enrollDetailRepo,
             IWebHostEnvironment webHostEnvironment,
@@ -69,7 +70,7 @@ namespace Iskul.Controllers
                 // enrollment record exists for this user,
                 // now check if enrollment record exists for the chosen school
             {
-                EnrollDetail enrollDetail = _enrollDetailRepo.FirstOrDefault(u => u.Id == enrollHeader.Id && u.SchoolId == id);
+                EnrollDetail enrollDetail = _enrollDetailRepo.FirstOrDefault(u => u.Id == enrollHeader.Id && u.SchoolId == school.Id);
 
                 if (enrollDetail != null && enrollDetail.EnrollStatus == WC.StatusSaved)
                 {
@@ -84,29 +85,31 @@ namespace Iskul.Controllers
                 }
 
             }
-            else
+
+            EnrollUserVM = new EnrollUserVM()
             {
-                EnrollUserVM = new EnrollUserVM()
+                ApplicationUser = applicationUser,
+                EnrollHeader = new EnrollHeader()
                 {
-                    ApplicationUser = applicationUser,
-                    EnrollHeader = new EnrollHeader()
-                    {
-                        ApplicationUserId = applicationUser.Id,
-                        EnrollDate = DateTime.Today,
-                        FirstName = applicationUser.FirstName,
-                        LastName = applicationUser.LastName,
-                        PhoneNumber = applicationUser.PhoneNumber,
-                        Email = applicationUser.Email
-                    },
-                    EnrollDetail = new EnrollDetail(),
+                    ApplicationUserId = applicationUser.Id,
+                    EnrollDate = DateTime.Today,
+                    FirstName = applicationUser.FirstName,
+                    LastName = applicationUser.LastName,
+                    PhoneNumber = applicationUser.PhoneNumber,
+                    Email = applicationUser.Email
+                },
+                EnrollDetail = new EnrollDetail()
+                {
+                    SchoolPhoto = applicationUser.ProfilePicture
+                },
 
-                    School = school
+                School = school
 
-                };
             };
 
-           
-                        
+
+
+
             return View(EnrollUserVM);
         }
     }

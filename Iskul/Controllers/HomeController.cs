@@ -168,7 +168,8 @@ namespace Iskul.Controllers
             //TempData[WC.Success] = "Item added to cart successfully";
             TempData[WC.Success] = "Enter enrollment details";
             //return RedirectToAction(nameof(Index));
-            return RedirectToAction(actionName: "Index", controllerName: "Enroll", routeValues:id);
+            //return RedirectToAction(actionName: "Index", controllerName: "Enroll", routeValues:id);
+            return RedirectToAction("Index", "Enroll", detailsVM);
         }
 
         public IActionResult RemoveFromCart(int id)

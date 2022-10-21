@@ -10,7 +10,7 @@ namespace Iskul_DataAccess
 {
     public class ApplicationDbContext : IdentityDbContext 
     {
-        internal readonly object InquiryDetail;
+        //internal readonly object InquiryDetail;
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

@@ -3,4 +3,236 @@
 *@
 @{
 }
-<H1>This page is under construction</H1>
+
+@*@model IEnumerable<Iskul_Models.School>*@
+@model Iskul_Models.ViewModels.EnrollUserVM
+
+
+<form method="post" enctype="multipart/form-data">
+    <input asp-for="@Model.School.Id" hidden />
+    <div class="container p-3 bg-white">
+        <div class="row pt-4 justify-content-center">
+            <div class="col-8">
+                <h2 class="text-primary" align="center">@Model.School.SchoolName</h2>
+            </div>
+        </div>
+        <div class="row pt-4 justify-content-center">
+            <div class="col col-lg-6">
+                <h2 class="text-white bg-dark" align="center">Enrollment Form</h2>
+            </div>
+        </div>
+        @* <div class="col-6 text-right">
+        <a asp-action="Upsert" class="btn btn-primary">
+        <i class="fas fa-plus"></i> &nbsp; Create New School
+        </a>
+        </div>*@
+        
+    </div>
+<br />
+<br />
+    @*<div class="container p-3 bg-white">*@
+        <div class="row">
+
+        
+        <div class="col-8">
+            <div class="form-group row py-2">
+                <div class="col-2">
+                    <label asp-for="@Model.EnrollHeader.LastName"></label>
+                </div>
+                <div class="col-6">
+                    <input asp-for="@Model.EnrollHeader.LastName" class="form-control" />
+                    <span asp-validation-for="@Model.EnrollHeader.LastName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row py-2">
+                <div class="col-2">
+                    <label asp-for="@Model.EnrollHeader.FirstName"></label>
+                </div>
+                <div class="col-6">
+                    <input asp-for="@Model.EnrollHeader.FirstName" class="form-control" />
+                    <span asp-validation-for="@Model.EnrollHeader.FirstName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row py-2">
+                <div class="col-2">
+                    <label asp-for="@Model.EnrollHeader.EnrollDate"></label>
+                </div>
+                <div class="col-6">
+                    <input type="date" asp-for="@Model.EnrollHeader.EnrollDate" disabled class="form-control" />
+                    <span asp-validation-for="@Model.EnrollHeader.EnrollDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row py-2">
+                <div class="col-2">
+                    <label asp-for="@Model.EnrollHeader.PhoneNumber"></label>
+                </div>
+                <div class="col-6">
+                    <input asp-for="@Model.EnrollHeader.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="@Model.EnrollHeader.PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row py-2">
+                <div class="col-2">
+                    <label asp-for="@Model.EnrollHeader.Email"></label>
+                </div>
+                <div class="col-6">
+                    <input asp-for="@Model.EnrollHeader.Email" class="form-control" />
+                    <span asp-validation-for="@Model.EnrollHeader.Email" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+   @* </div>
+    <div class="container p-3 bg-white">*@
+        <div class="col-4">
+            @*<div class="form-group row py-2">
+                Applicant Photo
+            </div>*@
+
+            @*// UploadBox*@
+           @* <div class="form-group row py-2">
+                <input type="file" name="files" id="uploadBox" multiple class="form-control" />
+            </div>*@
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="@Model.EnrollDetail.SchoolPhoto" style="width: 100%;"></label>
+                @if (Model.EnrollDetail.SchoolPhoto!= null)
+                {
+                <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.EnrollDetail.SchoolPhoto))">
+                }
+                else
+                {
+                    <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="">
+                }
+                <input type="file"
+                       accept=".png,.jpg,.jpeg,.gif,.tif"
+                       asp-for="@Model.EnrollDetail.SchoolPhoto"
+                       class="form-control"
+                       style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;"
+                       onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])" />
+                <span asp-validation-for="@Model.EnrollDetail.SchoolPhoto" class="text-danger"></span>
+            </div>
+                       
+        </div>
+
+    </div>
+   @* </div>*@
+    <div class="row">
+        <div class="col-8">
+            <div class="form-group row py-2">
+                <div class="col-2">
+                    <label asp-for="@Model.EnrollDetail.DateofBirth"></label>
+                </div>
+                <div class="col-6">
+                    <input asp-for="@Model.EnrollDetail.DateofBirth" type = "date" value="@DateTime.Now" class="form-control" />
+                    <span asp-validation-for="@Model.EnrollDetail.DateofBirth" class="text-danger"></span>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.Address"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.Address" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.Address" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.City"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.City" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.City" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.Province"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.Province" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.Province" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.ZipCode"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.ZipCode" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.ZipCode" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.ContactNumber"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.ContactNumber" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.ContactNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.Gender"></label>
+                        @*<label class="radio-inline">
+                            <input type="radio" name="optGender">Male
+                        </label>*@
+
+                        
+                    </div>
+                    <div class="col-6">
+                        <div class="form-check">
+                            <input type="radio"  class="form-check-input" id="radio1" name="optradio" value="Male" />Male
+                            <label class="form-check-label" for="radio1"></label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio"  class="form-check-input" id="radio2" name="optradio" value="Female" />Female
+                            <label class="form-check-label" for="radio2"></label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio"  class="form-check-input" id="radio3" name="optradio" value="Other" />Other
+                            <label class="form-check-label" for="radio3"></label>
+                        </div>
+                    </div>
+                   @* <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.Gender" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.Gender" class="text-danger"></span>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+   
+
+</form>
+
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        $(document).ready(function () {
+            $('.summernote').summernote({
+                height: 250
+            });
+        });
+        function validateInput() {
+            if (document.getElementById("uploadBox").value == "") {
+                Swal.fire(
+                    'Error',
+                    'Please upload an Image !',
+                    'error'
+                )
+                return false;
+            }
+            return true;
+        }
+    </script>
+}
+
+

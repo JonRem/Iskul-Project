@@ -109,3 +109,7 @@ LessonPDFPath		250
 Notes			250
 
 
+How redirect a view with parameter in MVC?
+Redirection is very easy, you just call controller and then action in that as above suggested. 
+There is option available to pass parameter too. 
+return RedirectToAction("Tests", new { ID = model.ID, projectName = model. ProjectName });03-Feb-2014

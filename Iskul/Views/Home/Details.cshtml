@@ -68,7 +68,7 @@
                             {
                                 <button type="submit" asp-route-id="@Model.Product.Id" class="btn btn-info form-control btn-lg" style="height:50px;">Add to Cart</button>
                             }*@
-                            <button type="submit" asp-route-id="@Model.School.Id" class="btn btn-info form-control btn-lg" style="height:50px;">Enroll Now</button>
+                            <button type="submit" asp-controller="Enroll" asp-action="Index" asp-route-id="@Model.School.Id" class="btn btn-info form-control btn-lg" style="height:50px;">Enroll Now</button>
 
 
                         </div>
