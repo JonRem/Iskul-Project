@@ -1,21 +1,19 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-@*@model IEnumerable<Iskul_Models.School>*@
-@model Iskul_Models.ViewModels.EnrollUserVM
-
+﻿@model Iskul_Models.ViewModels.EnrollUserVM
+@using Iskul_Utility
 
 <form method="post" enctype="multipart/form-data">
     <input asp-for="@Model.School.Id" hidden />
     <div class="container p-3 bg-white">
         <div class="row pt-4 justify-content-center">
-            <div class="col-8">
-                <h2 class="text-primary" align="center">@Model.School.SchoolName</h2>
-            </div>
+            <div class="col-12 col-lg-4 p-1 text-center">
+                <img src="@WC.ImagePath@Model.School.Image" width="100%" class="rounded" />
+            </div>            
         </div>
+        <div class="row pt-4 justify-content-center">
+                <div class="col-8">
+                    <h2 class="text-primary" align="center">@Model.School.SchoolName</h2>
+                </div>
+            </div>
         <div class="row pt-4 justify-content-center">
             <div class="col col-lg-6">
                 <h2 class="text-white bg-dark" align="center">Enrollment Form</h2>
@@ -31,9 +29,7 @@
 <br />
 <br />
     @*<div class="container p-3 bg-white">*@
-        <div class="row">
-
-        
+    <div class="row">
         <div class="col-8">
             <div class="form-group row py-2">
                 <div class="col-2">
@@ -82,24 +78,15 @@
             </div>
 
         </div>
-   @* </div>
-    <div class="container p-3 bg-white">*@
+        @* </div>
+        <div class="container p-3 bg-white">*@
         <div class="col-4">
-            @*<div class="form-group row py-2">
-                Applicant Photo
-            </div>*@
-
-            @*// UploadBox*@
-           @* <div class="form-group row py-2">
-                <input type="file" name="files" id="uploadBox" multiple class="form-control" />
-            </div>*@
-
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="@Model.EnrollDetail.SchoolPhoto" style="width: 100%;"></label>
-                @if (Model.EnrollDetail.SchoolPhoto!= null)
+                @if (Model.EnrollDetail.SchoolPhoto != null)
                 {
-                <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.EnrollDetail.SchoolPhoto))">
+                    <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.EnrollDetail.SchoolPhoto))">
                 }
                 else
                 {
@@ -113,9 +100,7 @@
                        onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])" />
                 <span asp-validation-for="@Model.EnrollDetail.SchoolPhoto" class="text-danger"></span>
             </div>
-                       
         </div>
-
     </div>
    @* </div>*@
     <div class="row">
@@ -175,36 +160,181 @@
                 </div>
                 <div class="form-group row py-2">
                     <div class="col-2">
-                        <label asp-for="@Model.EnrollDetail.Gender"></label>
-                        @*<label class="radio-inline">
-                            <input type="radio" name="optGender">Male
-                        </label>*@
-
-                        
+                        <label asp-for="@Model.EnrollDetail.Gender"></label>                        
                     </div>
                     <div class="col-6">
-                        <div class="form-check">
-                            <input type="radio"  class="form-check-input" id="radio1" name="optradio" value="Male" />Male
-                            <label class="form-check-label" for="radio1"></label>
-                        </div>
-                        <div class="form-check">
-                            <input type="radio"  class="form-check-input" id="radio2" name="optradio" value="Female" />Female
-                            <label class="form-check-label" for="radio2"></label>
-                        </div>
-                        <div class="form-check">
-                            <input type="radio"  class="form-check-input" id="radio3" name="optradio" value="Other" />Other
-                            <label class="form-check-label" for="radio3"></label>
-                        </div>
+                        @if (Model.EnrollDetail.Gender == null)
+                        {
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" id="radio1" name="EnrollDetail.Gender" value="Male" checked="checked" />Male
+                                <label class="form-check-label" for="radio1"></label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" id="radio2" name="EnrollDetail.Gender" value="Female" />Female
+                                <label class="form-check-label" for="radio2"></label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" id="radio3" name="EnrollDetail.Gender" value="Other" />Other
+                                <label class="form-check-label" for="radio3"></label>
+                            </div>
+                        }
+                        else
+                        {
+                            if (Model.EnrollDetail.Gender == "Male")
+                            {
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="radio1" name="EnrollDetail.Gender" value="Male" checked="checked" />Male
+                                    <label class="form-check-label" for="radio1"></label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="radio2" name="EnrollDetail.Gender" value="Female" />Female
+                                    <label class="form-check-label" for="radio2"></label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="radio3" name="EnrollDetail.Gender" value="Other" />Other
+                                    <label class="form-check-label" for="radio3"></label>
+                                </div>
+                            }
+                            else
+                            {
+                                if (Model.EnrollDetail.Gender == "Female")
+                                {
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="radio1" name="EnrollDetail.Gender" value="Male" />Male
+                                        <label class="form-check-label" for="radio1"></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="radio2" name="EnrollDetail.Gender" value="Female" checked="checked" />Female
+                                        <label class="form-check-label" for="radio2"></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="radio3" name="EnrollDetail.Gender" value="Other" />Other
+                                        <label class="form-check-label" for="radio3"></label>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="radio1" name="EnrollDetail.Gender" value="Male" />Male
+                                        <label class="form-check-label" for="radio1"></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="radio2" name="EnrollDetail.Gender" value="Female" />Female
+                                        <label class="form-check-label" for="radio2"></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="radio3" name="EnrollDetail.Gender" value="Other" checked="checked" />Other
+                                        <label class="form-check-label" for="radio3"></label>
+                                    </div>
+                                }
+                            }
+
+                        }
+                        
                     </div>
-                   @* <div class="col-6">
-                        <input asp-for="@Model.EnrollDetail.Gender" class="form-control" />
-                        <span asp-validation-for="@Model.EnrollDetail.Gender" class="text-danger"></span>
-                    </div>*@
                 </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.CivilStatus"></label>
+                    </div>
+                    <div class="col-6">
+                        <select asp-for="EnrollDetail.CivilStatus" asp-items="Model.CivilStatusSelectList" class="form-select">
+                            <option disabled selected>--Select Civil Status--</option>
+                        </select>
+
+                        <span asp-validation-for="@Model.EnrollDetail.CivilStatus" class="text-danger"></span>
+                    </div>                    
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.Nationality"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.Nationality" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.Nationality" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.EnrollReason"></label>
+                    </div>
+
+                    <div class="col-6">
+                        @*// Summernote*@
+                        <textarea asp-for="@Model.EnrollDetail.EnrollReason" class="form-control summernote"></textarea>
+                        <span asp-validation-for="@Model.EnrollDetail.EnrollReason" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.EmergencyContactName"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.EmergencyContactName" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.EmergencyContactName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.EmergencyContactNo"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.EmergencyContactNo" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.EmergencyContactNo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <p>Please upload Parent Consent Form if Student is below 18 years old</p>
+                    <div class="col-2">
+                        Consent Form
+                    </div>
+                    @*// UploadBox*@
+                    <div class="col-6">
+                        <input type="file" name="files" id="uploadBox" multiple class="form-control" />
+                    </div>
+                </div>
+                
+
             </div>
         </div>
     </div>
+    <div class="form-group row py-2">
+        <div class="col-md-12 row text-center">
+            <div class="col">
+                <a asp-action="Index" asp-controller="Home" class="btn btn-secondary w-100"><i class="fas fa-sign-out-alt"></i> Back/Cancel Application</a>
+            </div>
+            <div class="col">
+                <a asp-action="SaveApplication" class="btn btn-success w-100"><i class="bi bi-box-arrow-down"></i> Save Application</a>
+            </div>
+            <div class="col">
+                @if (Model.EnrollDetail.EnrollStatus == "Saved")
+                {
+                // update
+                    <input type="submit" class="btn btn-info w-100" value="Update Application" />
+                }
+                else
+                {
+                    // create
+                    int age = 0;
+                    age = DateTime.Now.Subtract(Model.EnrollDetail.DateofBirth).Days;
+                    age = age / 365;
 
+                    if (age < 18)
+                    {
+                        <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100" value="Submit Application" />
+
+                    }
+                    else
+                    {
+                        <input type="submit" class="btn btn-primary w-100" value="Submit Application" />
+                    }
+                }
+
+            </div>
+
+        </div>
+        
+    </div>
     
    
 
@@ -213,7 +343,7 @@
 @section Scripts{
 
     @{
-        <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
     }
     <script>
         $(document).ready(function () {
@@ -225,7 +355,7 @@
             if (document.getElementById("uploadBox").value == "") {
                 Swal.fire(
                     'Error',
-                    'Please upload an Image !',
+                    'Please upload Parent Consent Form for Students below 18 years of age!',
                     'error'
                 )
                 return false;

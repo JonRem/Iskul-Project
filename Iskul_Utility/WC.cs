@@ -39,7 +39,12 @@ namespace Iskul_Utility
             {
                 StatusApproved, StatusCancelled, StatusInProcess, StatusPending, StatusRefunded, StatusShipped
             });
+        public static readonly IEnumerable<string> ListCivilStatus = new ReadOnlyCollection<string>(
+           new List<string>
+           {
+                "Single", "Married", "Legally Separated", "Divorced", "Widow"
+           });
 
-        
+
     }
 }

@@ -59,7 +59,7 @@ namespace Iskul_Models
         [Display(Name = "Nationality")]
         public string Nationality { get; set; }
         [Required]
-        [Display(Name = "State Reason for Enrollment/Membership")]
+        [Display(Name = "State Reason for Enrollment")]
         public string EnrollReason { get; set; }
 
         [Display(Name = "For Ages below 18, please attach Parents Consent Form here")]

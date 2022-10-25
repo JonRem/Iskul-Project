@@ -33,9 +33,11 @@ namespace Iskul.Controllers
         private readonly IApplicationUserRepository _userRepo;
         private readonly ISchoolRepository _schoolRepo;
 
+        
+
         [BindProperty]
         public EnrollUserVM EnrollUserVM { get; set; }
-        
+
         public EnrollController(IEnrollHeaderRepository enrollHeaderRepo, 
             IEnrollDetailRepository enrollDetailRepo,
             IWebHostEnvironment webHostEnvironment,
@@ -54,6 +56,8 @@ namespace Iskul.Controllers
         public IActionResult Index(int? id) // id is schoolId
         {
             // retrieve applicationuser data here and check for saved enrollment
+
+           
 
             ApplicationUser applicationUser;
 
@@ -79,8 +83,13 @@ namespace Iskul.Controllers
                         ApplicationUser = applicationUser,
                         School = school,
                         EnrollHeader = enrollHeader,
-                        EnrollDetail = enrollDetail
-                    };
+                        EnrollDetail = enrollDetail,
+                        CivilStatusSelectList = WC.ListCivilStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                        {
+                            Text = i,
+                            Value = i
+                        })
+                };
                     return View(EnrollUserVM);
                 }
 
@@ -96,14 +105,20 @@ namespace Iskul.Controllers
                     FirstName = applicationUser.FirstName,
                     LastName = applicationUser.LastName,
                     PhoneNumber = applicationUser.PhoneNumber,
-                    Email = applicationUser.Email
+                    Email = applicationUser.Email,
+
                 },
                 EnrollDetail = new EnrollDetail()
                 {
                     SchoolPhoto = applicationUser.ProfilePicture
                 },
 
-                School = school
+                School = school,
+                CivilStatusSelectList = WC.ListCivilStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                {
+                    Text = i,
+                    Value = i
+                })
 
             };
 
