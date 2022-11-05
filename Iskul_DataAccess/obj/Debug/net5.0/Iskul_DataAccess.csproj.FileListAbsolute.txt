@@ -5,7 +5,6 @@ C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_DataAccess\obj\
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_DataAccess\obj\Debug\net5.0\Iskul_DataAccess.csproj.CoreCompileInputs.cache
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_DataAccess\bin\Debug\net5.0\Iskul_DataAccess.deps.json
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_DataAccess\bin\Debug\net5.0\Iskul_DataAccess.dll
-C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_DataAccess\bin\Debug\net5.0\ref\Iskul_DataAccess.dll
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_DataAccess\bin\Debug\net5.0\Iskul_DataAccess.pdb
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_DataAccess\bin\Debug\net5.0\Iskul_Models.dll
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_DataAccess\bin\Debug\net5.0\Iskul_Utility.dll
@@ -15,3 +14,4 @@ C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_DataAccess\obj\
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_DataAccess\obj\Debug\net5.0\Iskul_DataAccess.dll
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_DataAccess\obj\Debug\net5.0\ref\Iskul_DataAccess.dll
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_DataAccess\obj\Debug\net5.0\Iskul_DataAccess.pdb
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul_DataAccess\obj\Debug\net5.0\refint\Iskul_DataAccess.dll

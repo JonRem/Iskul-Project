@@ -1,6 +1,530 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model Iskul_Models.ViewModels.EnrollVM
+@using Iskul_Utility
+
+<form method="post" enctype="multipart/form-data" id="enroll">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input asp-for="@Model.SchoolId" hidden />
+    <input asp-for="@Model.SchoolName" hidden />
+    <input asp-for="@Model.SchoolImage" hidden />
+    <input asp-for="@Model.EnrollHeader.Id" hidden />
+    <input asp-for="@Model.EnrollHeader.ApplicationUserId" hidden />
+    
+    <input asp-for="@Model.EnrollDetail.SchoolId" hidden />
+    <input asp-for="@Model.EnrollDetail.EnrollHeaderId" hidden />
+    @*<input asp-for="@Model.EnrollDetail.SchoolPhoto" hidden />*@
+    <input asp-for="@Model.EnrollDetail.EnrollStatus" hidden />
+    <input asp-for="@Model.CivilStatusSelectList" hidden />
+    <input asp-for="@Model.ProfileImage" hidden />
+    <div class="container p-3 bg-white">
+        <div class="row pt-4 justify-content-center">
+            <div class="col-12 col-lg-4 p-1 text-center">
+                <img src="@WC.ImagePath@Model.SchoolImage" width="100%" class="rounded" />
+            </div>            
+        </div>
+        <div class="row pt-4 justify-content-center">
+                <div class="col-8">
+                    <h2 class="text-primary" align="center">@Model.SchoolName</h2>
+                </div>
+            </div>
+        <div class="row pt-4 justify-content-center">
+            <div class="col col-lg-6">
+                <h2 class="text-white bg-dark" align="center">Enrollment Form</h2>
+            </div>
+        </div>
+               
+    </div>
+<br />
+<br />
+    @*<div class="container p-3 bg-white">*@
+    <div class="row">
+        <div class="col-8">
+            <div class="form-group row py-2">
+                <div class="col-2">
+                    <label asp-for="@Model.EnrollHeader.LastName"></label>
+                </div>
+                <div class="col-6">
+                    <input asp-for="@Model.EnrollHeader.LastName" class="form-control" />
+                    <span asp-validation-for="@Model.EnrollHeader.LastName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row py-2">
+                <div class="col-2">
+                    <label asp-for="@Model.EnrollHeader.FirstName"></label>
+                </div>
+                <div class="col-6">
+                    <input asp-for="@Model.EnrollHeader.FirstName" class="form-control" />
+                    <span asp-validation-for="@Model.EnrollHeader.FirstName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row py-2">
+                <div class="col-2">
+                   @* <label asp-for="@Model.EnrollHeader.EnrollDate"></label>*@
+                   Enroll Date
+                </div>
+                <div class="col-6">
+                   @* <input type="date" asp-for="@Model.EnrollHeader.EnrollDate" value="@DateTime.Now" disabled class="form-control" />
+                    <span asp-validation-for="@Model.EnrollHeader.EnrollDate" class="text-danger"></span>*@
+                    <input asp-for="@Model.EnrollHeader.EnrollDate" asp-format="{0:MM/dd/yyyy}" value="@Model.EnrollHeader.EnrollDate.ToShortDateString()" id="enrollDate" type="text" readonly  class="form-control" />
+                    <span asp-validation-for="@Model.EnrollHeader.EnrollDate" class="text-danger"></span>
+                </div>
+            </div>
+             <div class="form-group row py-2">
+                <div class="col-2">
+                   @* <label asp-for="@Model.EnrollHeader.EnrollDate"></label>*@
+                   Log Date
+                </div>
+                <div class="col-6">
+                   <input asp-for="@Model.EnrollDetail.LogDate" asp-format="{0:MM/dd/yyyy}" value="@Model.EnrollDetail.LogDate.ToShortDateString()" id="logDate" type="text" readonly  class="form-control" />
+                    <span asp-validation-for="@Model.EnrollDetail.LogDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row py-2">
+                <div class="col-2">
+                    <label asp-for="@Model.EnrollHeader.PhoneNumber"></label>
+                </div>
+                <div class="col-6">
+                    <input asp-for="@Model.EnrollHeader.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="@Model.EnrollHeader.PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row py-2">
+                <div class="col-2">
+                    <label asp-for="@Model.EnrollHeader.Email"></label>
+                </div>
+                <div class="col-6">
+                    <input asp-for="@Model.EnrollHeader.Email" class="form-control" />
+                    <span asp-validation-for="@Model.EnrollHeader.Email" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+        @* </div>
+        <div class="container p-3 bg-white">*@
+        <div class="col-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="@Model.ProfileImage" style="width: 100%;"></label>
+                @if (Model.EnrollDetail.SchoolPhoto != null)
+                {
+                    //<img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.EnrollDetail.SchoolPhoto))">
+                    <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="@WC.ProfilePhotoPath@Model.EnrollDetail.SchoolPhoto" alt="Photo not found">
+                }
+                else
+                {
+                    if (Model.ProfileImage.FileName != null)
+                    {
+                        <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="@Model.ProfileImage.FileName" alt="No image available">
+                    }
+                    else
+                    {
+                        <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="@WC.ProfilePhotoPath@WC.NoImageAvailable" alt="Please upload your photo">
+
+                    }
+                }
+                <input type="file"
+                       accept=".png,.jpg,.jpeg,.gif,.tif"
+                       asp-for="@Model.ProfileImage"
+                       id = "uploadPhoto"
+                       class="form-control"
+                       style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;"
+                       onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])" />
+                <span asp-validation-for="@Model.ProfileImage" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+   @* </div>*@
+    <div class="row">
+        <div class="col-8">
+            <div class="form-group row py-2">
+                <div class="col-2">
+                    <label asp-for="@Model.EnrollDetail.DateofBirth"></label>
+                </div>
+                <div class="col-6">
+                    <input id="DateofBirth" asp-for="@Model.EnrollDetail.DateofBirth" type="date" asp-format="{0:MM/dd/yyyy}"  class="form-control" />
+                    <span asp-validation-for="@Model.EnrollDetail.DateofBirth" class="text-danger"></span>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.Address"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.Address" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.Address" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.City"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.City" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.City" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.Province"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.Province" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.Province" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.ZipCode"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.ZipCode" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.ZipCode" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.ContactNumber"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.ContactNumber" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.ContactNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.Gender"></label>                        
+                    </div>
+                    <div class="col-6">
+                        @if (Model.EnrollDetail.Gender == null)
+                        {
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" id="radio1" name="EnrollDetail.Gender" value="Male" checked="checked" />Male
+                                <label class="form-check-label" for="radio1"></label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" id="radio2" name="EnrollDetail.Gender" value="Female" />Female
+                                <label class="form-check-label" for="radio2"></label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" id="radio3" name="EnrollDetail.Gender" value="Other" />Other
+                                <label class="form-check-label" for="radio3"></label>
+                            </div>
+                        }
+                        else
+                        {
+                            if (Model.EnrollDetail.Gender == "Male")
+                            {
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="radio1" name="EnrollDetail.Gender" value="Male" checked="checked" />Male
+                                    <label class="form-check-label" for="radio1"></label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="radio2" name="EnrollDetail.Gender" value="Female" />Female
+                                    <label class="form-check-label" for="radio2"></label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="radio3" name="EnrollDetail.Gender" value="Other" />Other
+                                    <label class="form-check-label" for="radio3"></label>
+                                </div>
+                            }
+                            else
+                            {
+                                if (Model.EnrollDetail.Gender == "Female")
+                                {
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="radio1" name="EnrollDetail.Gender" value="Male" />Male
+                                        <label class="form-check-label" for="radio1"></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="radio2" name="EnrollDetail.Gender" value="Female" checked="checked" />Female
+                                        <label class="form-check-label" for="radio2"></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="radio3" name="EnrollDetail.Gender" value="Other" />Other
+                                        <label class="form-check-label" for="radio3"></label>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="radio1" name="EnrollDetail.Gender" value="Male" />Male
+                                        <label class="form-check-label" for="radio1"></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="radio2" name="EnrollDetail.Gender" value="Female" />Female
+                                        <label class="form-check-label" for="radio2"></label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="radio3" name="EnrollDetail.Gender" value="Other" checked="checked" />Other
+                                        <label class="form-check-label" for="radio3"></label>
+                                    </div>
+                                }
+                            }
+
+                        }
+                        
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.CivilStatus"></label>
+                    </div>
+                    <div class="col-6">
+                        <select asp-for="EnrollDetail.CivilStatus" asp-items="Model.CivilStatusSelectList" class="form-select">
+                            <option disabled selected>--Select Civil Status--</option>
+                        </select>
+
+                        <span asp-validation-for="@Model.EnrollDetail.CivilStatus" class="text-danger"></span>
+                    </div>                    
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.Nationality"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.Nationality" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.Nationality" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.EnrollReason"></label>
+                    </div>
+
+                    <div class="col-6">
+                        @*// Summernote*@
+                        <textarea asp-for="@Model.EnrollDetail.EnrollReason" 
+                            id="EnrollReason" 
+                            class="form-control" >                                                       
+                            @*class="form-control summernote" >*@                                                       
+                        </textarea>
+                        <span asp-validation-for="@Model.EnrollDetail.EnrollReason" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.EmergencyContactName"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.EmergencyContactName" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.EmergencyContactName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-2">
+                        <label asp-for="@Model.EnrollDetail.EmergencyContactNo"></label>
+                    </div>
+                    <div class="col-6">
+                        <input asp-for="@Model.EnrollDetail.EmergencyContactNo" class="form-control" />
+                        <span asp-validation-for="@Model.EnrollDetail.EmergencyContactNo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <p>Please upload Parent Consent Form if Student is below 18 years old</p>
+                    <div class="col-2">
+                        <label asp-for="@Model.ConsentForm" style="width: 100%;"></label>
+                    </div>
+                    @*// UploadBox*@
+                    <div class="col-6">
+                        @*<input type="file" name="files" id="uploadBox" multiple class="form-control" />*@
+                        
+                        <input type="file"
+                               accept=".pdf,.png,.jpg,.jpeg,.gif,.tif"
+                               asp-for="@Model.ConsentForm"
+                               id="uploadBox"
+                               class="form-control" />
+                        <span asp-validation-for="@Model.ConsentForm" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row py-2">
+                    <div class="col-8">
+                        <p>
+                            Click <a href="@WC.ParentalConsent" download="ParentalConsentForm.pdf">
+                                <b> here </b>
+                            </a>to download Consent Form
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="form-group row py-2">
+        <div class="col-md-12 row text-center">
+            <div class="col">
+                <a asp-action="Index" asp-controller="Home" class="btn btn-secondary w-100"><i class="fas fa-sign-out-alt"></i> Back/Cancel Application</a>
+            </div>
+            <div class="col">
+                <a asp-action="SaveApplication" class="btn btn-success w-100"><i class="bi bi-box-arrow-down"></i> Save Application</a>
+            </div>
+            <div class="col">
+                @if (Model.EnrollDetail.EnrollStatus == WC.StatusSaved)
+                {
+                // update
+                    // <input type="submit" class="btn btn-info w-100" asp-action="Upsert" value="Update Application" />
+                    int age = 0;
+                    age = DateTime.Now.Subtract(Model.EnrollDetail.DateofBirth).Days;
+                    age = age / 365;
+
+                    if (age < 18)
+                    {
+                        <input type="submit" onclick="return validateInput()" class="btn btn-info w-100" asp-action="Upsert" value="Update & Submit Application" />
+
+                    }
+                    else
+                    {
+                        <input type="submit" class="btn btn-info w-100" asp-action="Upsert" value="Update & Submit Application" />
+                    }
+
+                }
+                else
+                {
+                    // create
+                    int age = 0;
+                    age = DateTime.Now.Subtract(Model.EnrollDetail.DateofBirth).Days;
+                    age = age / 365;
+
+                    if (age < 18)
+                    {
+                        <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100" asp-action="Upsert" value="Submit Application" />
+
+                    }
+                    else
+                    {
+                        <input type="submit" class="btn btn-primary w-100" aria-pressed="true" asp-action="Upsert" value="Submit Application" />
+                    }
+                }
+
+            </div>
+
+        </div>
+        
+    </div>
+    
+   
+
+</form>
+
+@section Scripts{
+
+    @{
+    <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        $(document).ready(function () {
+            $('.summernote').summernote({
+                height: 250
+                //inheritPlaceholder: true
+            });
+        });
+        //$('#enroll').on('submit', function () {
+
+        //    if ($('.summernote').summernote('isEmpty')) {
+        //        Swal.fire(
+        //            'Error',
+        //            'Please state reason for enrollment.',
+        //            'error'
+        //        );
+                
+        //    };
+           
+        //});
+        function validateInput() {
+            if (document.getElementById("uploadBox").value == "") {
+                var birthday = document.getElementById("DateofBirth").value;
+                return dobValidate(birthday);
+                //Swal.fire(
+                //    'Error',
+                //    'Please upload Parental Consent Form for Students below 18 years of age!',
+                //    'error'
+                //)
+                //return false;
+            }
+            return true;
+        }
+
+        var x = document.getElementById('DateofBirth');
+        var y = document.getElementById('DateofBirth').value;
+
+        x.addEventListener("onchange", dobValidate(y));
+
+        function dobValidate(birth) {
+
+
+            var today = new Date();
+            var nowyear = today.getFullYear();
+            var nowmonth = today.getMonth();
+            var nowday = today.getDate();
+            //var b = document.getElementById('<%=TextBox2.ClientID%>').value;
+
+
+
+            var birthd = new Date(birth);
+
+            var birthyear = birthd.getFullYear();
+            var birthmonth = birthd.getMonth();
+            var birthday = birthd.getDate();
+
+            var age = nowyear - birthyear;
+            var age_month = nowmonth - birthmonth;
+            var age_day = nowday - birthday;
+
+
+            if (age > 100) {
+                //alert("Age cannot be more than 100 Years.Please enter correct age")
+                Swal.fire(
+                    'Error',
+                    'Age cannot be more than 100 Years.Please enter correct age',
+                    'error'
+                )
+                return false;
+            }
+            if (age_month < 0 || (age_month == 0 && age_day < 0)) {
+                age = parseInt(age) - 1;
+
+
+            }
+            if ((age == 18 && age_month <= 0 && age_day <= 0) || age < 18) {
+                //alert("Please upload Parental Consent Form for Students below 18 years of age!");
+                Swal.fire(
+                    'Error',
+                    'Please upload Parental Consent Form for Students below 18 years of age!',
+                    'error'
+                )
+                return false;
+            }
+            return true;
+        }
+        //        onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])" />
+
+        //var x = document.getElementById('uploadPhoto');
+        //x.addEventListener("onload", myFunctiopn);
+
+        //function myFunction() {
+        //    document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0]);
+        //}
+
+
+       
+        function validateEnrollReason() {
+            if (document.getElementById("EnrollReason").value == "") {
+                Swal.fire(
+                    'Error',
+                    'Please state reason for Enrollment',
+                    'error'
+                )
+                return false;
+            }
+            return true;
+        }
+        //$(document).ready(function () {
+        //    var enrollDate = document.getElementById("enrollDate");
+        //    const d = new Date();
+        //    let dte = d.toDateInputValue();
+        //    if (enrollDate.value == '1/1/0001') {
+        //        enrollDate.value = dte;
+        //    }
+        //})
+    </script>
 }
-<H1>This page is under construction</H1>
+
+

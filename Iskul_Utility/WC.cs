@@ -9,6 +9,10 @@ namespace Iskul_Utility
     public static class WC
     {
         public const string ImagePath = @"\images\school\";
+        public const string ConsentForm = @"\images\consentform\";
+        public const string ProfilePhotoPath = @"\images\ProfilePhotos\";
+        public const string NoImageAvailable = @"no-image-available.png";
+        public const string ParentalConsent = @"\DocumentForms\parental-consent-form.pdf";
         public const string SessionCart = "ShoppingCartSession";
         public const string SessionInquiryId = "InquirySession";
 
@@ -31,11 +35,20 @@ namespace Iskul_Utility
         public const string StatusShipped = "Shipped";
         public const string StatusCancelled = "Cancelled";
         public const string StatusRefunded = "Refunded";
+        public const string StatusDisapproved = "Disapproved";
+        public const string StatusSaved = "Saved";
 
         public static readonly IEnumerable<string> listStatus = new ReadOnlyCollection<string>(
             new List<string>
             {
                 StatusApproved, StatusCancelled, StatusInProcess, StatusPending, StatusRefunded, StatusShipped
             });
+        public static readonly IEnumerable<string> ListCivilStatus = new ReadOnlyCollection<string>(
+           new List<string>
+           {
+                "Single", "Married", "Legally Separated", "Divorced", "Widow"
+           });
+
+
     }
 }

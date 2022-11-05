@@ -58,6 +58,8 @@ namespace Iskul
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             //services.AddScoped<IMemberRepository, MemberRepository>();
             services.AddScoped<ISchoolRepository, SchoolRepository>();
+            services.AddScoped<IEnrollHeaderRepository, EnrollHeaderRepository>();
+            services.AddScoped<IEnrollDetailRepository, EnrollDetailRepository>();
             //services.AddScoped<IApplicationTypeRepository, ApplicationTypeRepository>();
             //services.AddScoped<IProductRepository, ProductRepository>();
             //services.AddScoped<IInquiryHeaderRepository, InquiryHeaderRepository>();
