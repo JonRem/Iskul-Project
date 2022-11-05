@@ -18,6 +18,8 @@ namespace Iskul_Models
         [ForeignKey("ApplicationUserId")]
         public ApplicationUser ApplicationUser { get; set; }
         [DisplayName("Enroll Date")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         [Required]
         public DateTime EnrollDate { get; set; }
         [DisplayName("Phone Number")]
@@ -29,8 +31,12 @@ namespace Iskul_Models
         [DisplayName("Last Name")]
         [Required]
         public string LastName { get; set; }
+
+        [Required(ErrorMessage = "Please enter your email address")]
+        [DataType(DataType.EmailAddress)]
+        [MaxLength(50)]
+        [RegularExpression(@"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}", ErrorMessage = "Please enter correct email")]
         [DisplayName("Email Address")]
-        [Required]
         public string Email { get; set; }
     }
 }

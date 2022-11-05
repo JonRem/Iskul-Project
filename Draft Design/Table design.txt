@@ -109,6 +109,12 @@ LessonPDFPath		250
 Notes			250
 
 
+File Upload In Asp.net Core - How To Save A File In C# and ASP.NET Core Razor Pages
+https://www.youtube.com/watch?v=hcoKLORWbjY
+
+ASP.NET Core Image File Upload using View Component in MVC EF Core
+https://www.youtube.com/watch?v=EZQ64GlSlB4
+
 How redirect a view with parameter in MVC?
 Redirection is very easy, you just call controller and then action in that as above suggested. 
 There is option available to pass parameter too. 

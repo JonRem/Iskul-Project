@@ -9,6 +9,10 @@ namespace Iskul_Utility
     public static class WC
     {
         public const string ImagePath = @"\images\school\";
+        public const string ConsentForm = @"\images\consentform\";
+        public const string ProfilePhotoPath = @"\images\ProfilePhotos\";
+        public const string NoImageAvailable = @"no-image-available.png";
+        public const string ParentalConsent = @"\DocumentForms\parental-consent-form.pdf";
         public const string SessionCart = "ShoppingCartSession";
         public const string SessionInquiryId = "InquirySession";
 

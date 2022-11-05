@@ -30,7 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\consentform\" />
+    <Folder Include="wwwroot\images\ProfilePhotos\" />
     <Folder Include="wwwroot\images\school\" />
+    <Folder Include="wwwroot\DocumentForms\" />
     <Folder Include="wwwroot\templates\" />
   </ItemGroup>
 

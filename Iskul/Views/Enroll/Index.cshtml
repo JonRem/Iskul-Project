@@ -1,17 +1,30 @@
-﻿@model Iskul_Models.ViewModels.EnrollUserVM
+﻿@model Iskul_Models.ViewModels.EnrollVM
 @using Iskul_Utility
 
-<form method="post" enctype="multipart/form-data">
-    <input asp-for="@Model.School.Id" hidden />
+<form method="post" enctype="multipart/form-data" id="enroll">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input asp-for="@Model.SchoolId" hidden />
+    <input asp-for="@Model.SchoolName" hidden />
+    <input asp-for="@Model.SchoolImage" hidden />
+    <input asp-for="@Model.EnrollHeader.Id" hidden />
+    <input asp-for="@Model.EnrollHeader.ApplicationUserId" hidden />
+    
+    <input asp-for="@Model.EnrollDetail.SchoolId" hidden />
+    <input asp-for="@Model.EnrollDetail.EnrollHeaderId" hidden />
+    @*<input asp-for="@Model.EnrollDetail.SchoolPhoto" hidden />*@
+    <input asp-for="@Model.EnrollDetail.EnrollStatus" hidden />
+    <input asp-for="@Model.CivilStatusSelectList" hidden />
+    <input asp-for="@Model.ProfileImage" hidden />
     <div class="container p-3 bg-white">
         <div class="row pt-4 justify-content-center">
             <div class="col-12 col-lg-4 p-1 text-center">
-                <img src="@WC.ImagePath@Model.School.Image" width="100%" class="rounded" />
+                <img src="@WC.ImagePath@Model.SchoolImage" width="100%" class="rounded" />
             </div>            
         </div>
         <div class="row pt-4 justify-content-center">
                 <div class="col-8">
-                    <h2 class="text-primary" align="center">@Model.School.SchoolName</h2>
+                    <h2 class="text-primary" align="center">@Model.SchoolName</h2>
                 </div>
             </div>
         <div class="row pt-4 justify-content-center">
@@ -19,12 +32,7 @@
                 <h2 class="text-white bg-dark" align="center">Enrollment Form</h2>
             </div>
         </div>
-        @* <div class="col-6 text-right">
-        <a asp-action="Upsert" class="btn btn-primary">
-        <i class="fas fa-plus"></i> &nbsp; Create New School
-        </a>
-        </div>*@
-        
+               
     </div>
 <br />
 <br />
@@ -51,11 +59,24 @@
             </div>
             <div class="form-group row py-2">
                 <div class="col-2">
-                    <label asp-for="@Model.EnrollHeader.EnrollDate"></label>
+                   @* <label asp-for="@Model.EnrollHeader.EnrollDate"></label>*@
+                   Enroll Date
                 </div>
                 <div class="col-6">
-                    <input type="date" asp-for="@Model.EnrollHeader.EnrollDate" disabled class="form-control" />
+                   @* <input type="date" asp-for="@Model.EnrollHeader.EnrollDate" value="@DateTime.Now" disabled class="form-control" />
+                    <span asp-validation-for="@Model.EnrollHeader.EnrollDate" class="text-danger"></span>*@
+                    <input asp-for="@Model.EnrollHeader.EnrollDate" asp-format="{0:MM/dd/yyyy}" value="@Model.EnrollHeader.EnrollDate.ToShortDateString()" id="enrollDate" type="text" readonly  class="form-control" />
                     <span asp-validation-for="@Model.EnrollHeader.EnrollDate" class="text-danger"></span>
+                </div>
+            </div>
+             <div class="form-group row py-2">
+                <div class="col-2">
+                   @* <label asp-for="@Model.EnrollHeader.EnrollDate"></label>*@
+                   Log Date
+                </div>
+                <div class="col-6">
+                   <input asp-for="@Model.EnrollDetail.LogDate" asp-format="{0:MM/dd/yyyy}" value="@Model.EnrollDetail.LogDate.ToShortDateString()" id="logDate" type="text" readonly  class="form-control" />
+                    <span asp-validation-for="@Model.EnrollDetail.LogDate" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row py-2">
@@ -83,22 +104,32 @@
         <div class="col-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="@Model.EnrollDetail.SchoolPhoto" style="width: 100%;"></label>
+                <label asp-for="@Model.ProfileImage" style="width: 100%;"></label>
                 @if (Model.EnrollDetail.SchoolPhoto != null)
                 {
-                    <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.EnrollDetail.SchoolPhoto))">
+                    //<img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.EnrollDetail.SchoolPhoto))">
+                    <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="@WC.ProfilePhotoPath@Model.EnrollDetail.SchoolPhoto" alt="Photo not found">
                 }
                 else
                 {
-                    <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="">
+                    if (Model.ProfileImage.FileName != null)
+                    {
+                        <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="@Model.ProfileImage.FileName" alt="No image available">
+                    }
+                    else
+                    {
+                        <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="@WC.ProfilePhotoPath@WC.NoImageAvailable" alt="Please upload your photo">
+
+                    }
                 }
                 <input type="file"
                        accept=".png,.jpg,.jpeg,.gif,.tif"
-                       asp-for="@Model.EnrollDetail.SchoolPhoto"
+                       asp-for="@Model.ProfileImage"
+                       id = "uploadPhoto"
                        class="form-control"
                        style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;"
                        onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])" />
-                <span asp-validation-for="@Model.EnrollDetail.SchoolPhoto" class="text-danger"></span>
+                <span asp-validation-for="@Model.ProfileImage" class="text-danger"></span>
             </div>
         </div>
     </div>
@@ -110,7 +141,7 @@
                     <label asp-for="@Model.EnrollDetail.DateofBirth"></label>
                 </div>
                 <div class="col-6">
-                    <input asp-for="@Model.EnrollDetail.DateofBirth" type = "date" value="@DateTime.Now" class="form-control" />
+                    <input id="DateofBirth" asp-for="@Model.EnrollDetail.DateofBirth" type="date" asp-format="{0:MM/dd/yyyy}"  class="form-control" />
                     <span asp-validation-for="@Model.EnrollDetail.DateofBirth" class="text-danger"></span>
                 </div>
                 <div class="form-group row py-2">
@@ -261,7 +292,11 @@
 
                     <div class="col-6">
                         @*// Summernote*@
-                        <textarea asp-for="@Model.EnrollDetail.EnrollReason" class="form-control summernote"></textarea>
+                        <textarea asp-for="@Model.EnrollDetail.EnrollReason" 
+                            id="EnrollReason" 
+                            class="form-control" >                                                       
+                            @*class="form-control summernote" >*@                                                       
+                        </textarea>
                         <span asp-validation-for="@Model.EnrollDetail.EnrollReason" class="text-danger"></span>
                     </div>
                 </div>
@@ -286,14 +321,29 @@
                 <div class="form-group row py-2">
                     <p>Please upload Parent Consent Form if Student is below 18 years old</p>
                     <div class="col-2">
-                        Consent Form
+                        <label asp-for="@Model.ConsentForm" style="width: 100%;"></label>
                     </div>
                     @*// UploadBox*@
                     <div class="col-6">
-                        <input type="file" name="files" id="uploadBox" multiple class="form-control" />
+                        @*<input type="file" name="files" id="uploadBox" multiple class="form-control" />*@
+                        
+                        <input type="file"
+                               accept=".pdf,.png,.jpg,.jpeg,.gif,.tif"
+                               asp-for="@Model.ConsentForm"
+                               id="uploadBox"
+                               class="form-control" />
+                        <span asp-validation-for="@Model.ConsentForm" class="text-danger"></span>
                     </div>
                 </div>
-                
+                <div class="row py-2">
+                    <div class="col-8">
+                        <p>
+                            Click <a href="@WC.ParentalConsent" download="ParentalConsentForm.pdf">
+                                <b> here </b>
+                            </a>to download Consent Form
+                        </p>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -307,10 +357,24 @@
                 <a asp-action="SaveApplication" class="btn btn-success w-100"><i class="bi bi-box-arrow-down"></i> Save Application</a>
             </div>
             <div class="col">
-                @if (Model.EnrollDetail.EnrollStatus == "Saved")
+                @if (Model.EnrollDetail.EnrollStatus == WC.StatusSaved)
                 {
                 // update
-                    <input type="submit" class="btn btn-info w-100" value="Update Application" />
+                    // <input type="submit" class="btn btn-info w-100" asp-action="Upsert" value="Update Application" />
+                    int age = 0;
+                    age = DateTime.Now.Subtract(Model.EnrollDetail.DateofBirth).Days;
+                    age = age / 365;
+
+                    if (age < 18)
+                    {
+                        <input type="submit" onclick="return validateInput()" class="btn btn-info w-100" asp-action="Upsert" value="Update & Submit Application" />
+
+                    }
+                    else
+                    {
+                        <input type="submit" class="btn btn-info w-100" asp-action="Upsert" value="Update & Submit Application" />
+                    }
+
                 }
                 else
                 {
@@ -321,12 +385,12 @@
 
                     if (age < 18)
                     {
-                        <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100" value="Submit Application" />
+                        <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100" asp-action="Upsert" value="Submit Application" />
 
                     }
                     else
                     {
-                        <input type="submit" class="btn btn-primary w-100" value="Submit Application" />
+                        <input type="submit" class="btn btn-primary w-100" aria-pressed="true" asp-action="Upsert" value="Submit Application" />
                     }
                 }
 
@@ -349,19 +413,117 @@
         $(document).ready(function () {
             $('.summernote').summernote({
                 height: 250
+                //inheritPlaceholder: true
             });
         });
+        //$('#enroll').on('submit', function () {
+
+        //    if ($('.summernote').summernote('isEmpty')) {
+        //        Swal.fire(
+        //            'Error',
+        //            'Please state reason for enrollment.',
+        //            'error'
+        //        );
+                
+        //    };
+           
+        //});
         function validateInput() {
             if (document.getElementById("uploadBox").value == "") {
+                var birthday = document.getElementById("DateofBirth").value;
+                return dobValidate(birthday);
+                //Swal.fire(
+                //    'Error',
+                //    'Please upload Parental Consent Form for Students below 18 years of age!',
+                //    'error'
+                //)
+                //return false;
+            }
+            return true;
+        }
+
+        var x = document.getElementById('DateofBirth');
+        var y = document.getElementById('DateofBirth').value;
+
+        x.addEventListener("onchange", dobValidate(y));
+
+        function dobValidate(birth) {
+
+
+            var today = new Date();
+            var nowyear = today.getFullYear();
+            var nowmonth = today.getMonth();
+            var nowday = today.getDate();
+            //var b = document.getElementById('<%=TextBox2.ClientID%>').value;
+
+
+
+            var birthd = new Date(birth);
+
+            var birthyear = birthd.getFullYear();
+            var birthmonth = birthd.getMonth();
+            var birthday = birthd.getDate();
+
+            var age = nowyear - birthyear;
+            var age_month = nowmonth - birthmonth;
+            var age_day = nowday - birthday;
+
+
+            if (age > 100) {
+                //alert("Age cannot be more than 100 Years.Please enter correct age")
                 Swal.fire(
                     'Error',
-                    'Please upload Parent Consent Form for Students below 18 years of age!',
+                    'Age cannot be more than 100 Years.Please enter correct age',
+                    'error'
+                )
+                return false;
+            }
+            if (age_month < 0 || (age_month == 0 && age_day < 0)) {
+                age = parseInt(age) - 1;
+
+
+            }
+            if ((age == 18 && age_month <= 0 && age_day <= 0) || age < 18) {
+                //alert("Please upload Parental Consent Form for Students below 18 years of age!");
+                Swal.fire(
+                    'Error',
+                    'Please upload Parental Consent Form for Students below 18 years of age!',
                     'error'
                 )
                 return false;
             }
             return true;
         }
+        //        onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])" />
+
+        //var x = document.getElementById('uploadPhoto');
+        //x.addEventListener("onload", myFunctiopn);
+
+        //function myFunction() {
+        //    document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0]);
+        //}
+
+
+       
+        function validateEnrollReason() {
+            if (document.getElementById("EnrollReason").value == "") {
+                Swal.fire(
+                    'Error',
+                    'Please state reason for Enrollment',
+                    'error'
+                )
+                return false;
+            }
+            return true;
+        }
+        //$(document).ready(function () {
+        //    var enrollDate = document.getElementById("enrollDate");
+        //    const d = new Date();
+        //    let dte = d.toDateInputValue();
+        //    if (enrollDate.value == '1/1/0001') {
+        //        enrollDate.value = dte;
+        //    }
+        //})
     </script>
 }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,23 +14,27 @@ namespace Iskul_Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        
+        [Display(Name = "Enroll Header Id")]
         public int EnrollHeaderId { get; set; }
-
         [ForeignKey("EnrollHeaderId")]
         public EnrollHeader EnrollHeader { get; set; }
 
-        [Required]
+        [Display(Name = "School Id")]
         public int SchoolId { get; set; }
 
         [ForeignKey("SchoolId")]
         public School School { get; set; }
 
         [Required]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Log Date")]
         public DateTime LogDate { get; set; }
 
         [Required]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Date of Birth")]
         public DateTime DateofBirth { get; set; }
 
@@ -59,15 +64,18 @@ namespace Iskul_Models
         [Display(Name = "Nationality")]
         public string Nationality { get; set; }
         [Required]
-        [Display(Name = "State Reason for Enrollment")]
+        [Display(Name = "Reason for Enrollment")]
         public string EnrollReason { get; set; }
 
-        [Display(Name = "For Ages below 18, please attach Parents Consent Form here")]
+        [Display(Name = "Consent Form")]
         public string ConsentForm { get; set; }
 
-        [Required]
-        [Display(Name = "School Profile Photo")]
-        public byte[] SchoolPhoto { get; set; }
+        //[Required]
+        //[Display(Name = "School Profile Photo")]
+        //public byte[] SchoolPhoto { get; set; }
+        [Display(Name = "Profile Photo")]
+        public string SchoolPhoto { get; set; }
+
         [Required]
         [Display(Name = "Emergency Contact Person")]
         public string EmergencyContactName { get; set; }
@@ -75,6 +83,11 @@ namespace Iskul_Models
         [Display(Name = "Emergency Contact Number")]
         public string EmergencyContactNo { get; set; }
         public string EnrollStatus { get; set; }  // Saved, Pending, Approved, Processing, Cancelled, Disapproved
-        
+
+        //[Required(ErrorMessage = "Please choose Profile Photo")]
+        //[Display(Name = "Profile Photo")]
+        //[NotMapped]
+        //public IFormFile ProfileImage  { get; set; }
+
     }
 }
