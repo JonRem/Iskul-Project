@@ -21,7 +21,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Identity;
-
+using Syncfusion.EJ2.Charts;
+using Syncfusion.EJ2.Inputs;
 
 namespace Iskul.Controllers
 {
@@ -71,13 +72,19 @@ namespace Iskul.Controllers
 
             School school = _schoolRepo.FirstOrDefault(u => u.Id == id);
 
-            EnrollHeader enrollHeader = _enrollHeaderRepo.FirstOrDefault(u => u.ApplicationUserId == applicationUser.Id);
+            EnrollHeader enrollHeader = _enrollHeaderRepo.FirstOrDefault(u => u.ApplicationUserId == applicationUser.Id && u.SchoolId == school.Id);
             
-            if (enrollHeader != null)  
+            if (enrollHeader != null)
                 // enrollment record exists for this user,
                 // now check if enrollment record exists for the chosen school
             {
-                EnrollDetail enrollDetail = _enrollDetailRepo.FirstOrDefault(u => u.EnrollHeaderId == enrollHeader.Id && u.SchoolId == school.Id);
+                if (enrollHeader.DetailRecOpen == false)
+                {
+                    TempData[WC.Error] = "Enrollment unavailable, User may have on-going application or already enrolled, please choose another school.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                EnrollDetail enrollDetail = _enrollDetailRepo.FirstOrDefault(u => u.EnrollHeaderId == enrollHeader.Id && u.Id == enrollHeader.LastDetailRec);
 
                 if (enrollDetail != null && enrollDetail.EnrollStatus == WC.StatusSaved)
                 {
@@ -108,7 +115,7 @@ namespace Iskul.Controllers
                         EnrollHeader = enrollHeader,  // Header exists
                         EnrollDetail = new EnrollDetail()
                         {
-                            SchoolId = school.Id,
+                            EnrollDate = DateTime.Now,
                             LogDate = DateTime.Now,
                             DateofBirth = DateTime.Now,
                             SchoolPhoto = WC.NoImageAvailable,
@@ -137,7 +144,7 @@ namespace Iskul.Controllers
                 EnrollHeader = new EnrollHeader()
                 {
                     ApplicationUserId = applicationUser.Id,
-                    EnrollDate = DateTime.Now,
+                    SchoolId = school.Id,                    
                     FirstName = applicationUser.FirstName,
                     LastName = applicationUser.LastName,
                     PhoneNumber = applicationUser.PhoneNumber,
@@ -147,7 +154,7 @@ namespace Iskul.Controllers
 
                 EnrollDetail = new EnrollDetail()
                 {
-                    SchoolId = school.Id,
+                    EnrollDate = DateTime.Now,
                     LogDate = DateTime.Now,
                     DateofBirth = DateTime.Now,
                     SchoolPhoto =  WC.NoImageAvailable,
@@ -237,7 +244,8 @@ namespace Iskul.Controllers
                         }
                             
                     }
-                    
+
+                    enrollVM.EnrollDetail.EnrollDate = DateTime.Now;
 
                     enrollVM.EnrollDetail.EnrollStatus = WC.StatusPending;
 
@@ -246,6 +254,30 @@ namespace Iskul.Controllers
                     
 
                     _enrollDetailRepo.Add(enrollVM.EnrollDetail);
+                    _enrollDetailRepo.Save();
+
+                    // update header record to mark last detail record
+                    
+                    try
+                    {
+                        _enrollHeaderRepo.FirstOrDefault(u => u.Id == enrollVM.EnrollHeader.Id, isTracking: false);
+                        // make detail record unavailable for for editing
+                        enrollVM.EnrollHeader.DetailRecOpen = false;  
+                        // insert detail record ID in Header
+                        enrollVM.EnrollHeader.LastDetailRec = enrollVM.EnrollDetail.Id;
+
+                        _enrollHeaderRepo.Update(enrollVM.EnrollHeader);
+                        _enrollHeaderRepo.Save();
+                    }
+                        
+                        catch (Exception e)
+                    {
+                        //Console.WriteLine("Exception caught: {0}", e);
+                        TempData[WC.Error] = "Exception caught: {0} " + e;
+                        //TempData[WC.Error] = "Action completed with Error on Header record update ... " + ;
+                        return RedirectToAction("Index", "Home");
+                    }
+                   
 
                 }
                 else
@@ -255,50 +287,101 @@ namespace Iskul.Controllers
                     // no tracking should be set for this object so only one instance of the object will be updated which is ProductVM.Product
                     var objFromDb = _enrollDetailRepo.FirstOrDefault(u => u.Id == enrollVM.EnrollDetail.Id, isTracking: false);
 
-                    //check here if new file has been updated for an existing consent form
                     if (files.Count > 0)
                     {
-                        string upload = webRootPath + WC.ConsentForm;
-                        string fileName = Guid.NewGuid().ToString();
-                        string extension = Path.GetExtension(files[0].FileName);
-
-                        var oldFile = Path.Combine(upload, objFromDb.ConsentForm);
-
-                        //delete old file if it exists in the image folder
-                        if (System.IO.File.Exists(oldFile))
+                        if (enrollVM.ProfileImage.Name == files[0].Name)
                         {
-                            System.IO.File.Delete(oldFile);
+                            string uploadPhoto = webRootPath + WC.ProfilePhotoPath;
+                            string fileNamePhoto = Guid.NewGuid().ToString();
+                            string extensionPhoto = Path.GetExtension(files[0].FileName);
+
+                            var oldPhotoFile = Path.Combine(uploadPhoto, objFromDb.SchoolPhoto);
+
+                            //delete old file if it exists in the image folder
+
+                            if (System.IO.File.Exists(oldPhotoFile))
+                            {
+                                System.IO.File.Delete(oldPhotoFile);
+                            }
+                            using (var fileStream = new FileStream(Path.Combine(uploadPhoto, fileNamePhoto + extensionPhoto), FileMode.Create))
+                            {
+                                files[0].CopyTo(fileStream);
+                            }
+                            enrollVM.EnrollDetail.SchoolPhoto = fileNamePhoto + extensionPhoto;
+                        }
+                        //check here if new file has been updated for an existing consent form
+
+                        if (enrollVM.ConsentForm != null)
+                        {
+                            if (enrollVM.ConsentForm.Name == files[1].Name)
+                            {
+                                string upload = webRootPath + WC.ConsentForm;
+                                string fileName = Guid.NewGuid().ToString();
+                                string extension = Path.GetExtension(files[1].FileName);
+
+                                var oldFile = Path.Combine(upload, objFromDb.ConsentForm);
+
+                                //delete old file if it exists in the Consent Form folder
+                                if (System.IO.File.Exists(oldFile))
+                                {
+                                    System.IO.File.Delete(oldFile);
+                                }
+                                using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                                {
+                                    files[1].CopyTo(fileStream);
+                                }
+
+                                enrollVM.EnrollDetail.ConsentForm = fileName + extension;
+                            }
+
                         }
 
-                        using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
-                        {
-                            files[0].CopyTo(fileStream);
-                        }
-
-                        enrollVM.EnrollDetail.ConsentForm = fileName + extension;
                     }
                     else
                     {
+                        enrollVM.EnrollDetail.SchoolPhoto = objFromDb.SchoolPhoto;
                         enrollVM.EnrollDetail.ConsentForm = objFromDb.ConsentForm;
                     }
 
                     enrollVM.EnrollDetail.EnrollStatus = WC.StatusPending;
-
-                    enrollVM.EnrollDetail.LogDate = DateTime.Now;
-
-                    
+                    enrollVM.EnrollDetail.EnrollDate = DateTime.Now;
+                    enrollVM.EnrollDetail.LogDate = DateTime.Now;                    
 
                     _enrollDetailRepo.Update(enrollVM.EnrollDetail);
+
+                    _enrollDetailRepo.Save();
+
+                    // update header record to mark last detail record
+
+                    try
+                    {
+                        _enrollHeaderRepo.FirstOrDefault(u => u.Id == enrollVM.EnrollHeader.Id, isTracking: false);
+                        // make detail record unavailable for for editing
+                        enrollVM.EnrollHeader.DetailRecOpen = false;
+                        // insert detail record ID in Header
+                        enrollVM.EnrollHeader.LastDetailRec = enrollVM.EnrollDetail.Id;
+
+                        _enrollHeaderRepo.Update(enrollVM.EnrollHeader);
+                        _enrollHeaderRepo.Save();
+                    }
+
+                    catch (Exception e)
+                    {
+                        //Console.WriteLine("Exception caught: {0}", e);
+                        TempData[WC.Error] = "Exception caught: {0} " + e;
+                        //TempData[WC.Error] = "Action completed with Error on Header record update ... " + ;
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 
-                _enrollDetailRepo.Save();
                 TempData[WC.Success] = "Action completed successfully";
-                return RedirectToAction("Index", "Home");
+                //return RedirectToAction("Index", "Home");
+                return RedirectToAction("EnrollConfirmation", enrollVM);
             }
 
             // if model state is not valid, the view model should be populated again
             //schoolVM.CategorySelectList = _schoolRepo.GetAllDropdownList(WC.CategoryName);
-            enrollVM.EnrollHeader.EnrollDate = DateTime.Now;
+            //enrollVM.EnrollHeader.EnrollDate = DateTime.Now;
             enrollVM.CivilStatusSelectList = WC.ListCivilStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
             {
                 Text = i,
@@ -307,59 +390,144 @@ namespace Iskul.Controllers
             return View("Index", enrollVM);
         }
 
+        // Enrollment Confirmation
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        [ActionName("EnrollConfirmation")]
+        public async Task<IActionResult> EnrollConfirmationAsync(EnrollVM enrollVM)
+        {
+            // ww need to confirmation email
+            var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
+              + "templates" + Path.DirectorySeparatorChar.ToString() +
+              "Inquiry.html";
+
+            var subject = "New Application";
+            string HtmlBody = "";
+            using (StreamReader sr = System.IO.File.OpenText(PathToTemplate))
+            {
+                HtmlBody = sr.ReadToEnd();
+            }
+
+            //Name: {0}
+            //Email: { 1}
+            //Phone: { 2}
+            //Enrollment Date: {3}
+            //School: { 4}
+
+            StringBuilder SchoolListSB = new StringBuilder();
+            //foreach (var prod in enrollVM.SchoolId)
+            //{
+            SchoolListSB.Append($" - Name: {enrollVM.SchoolName} <span style='font-size:14px;'> (ID: {enrollVM.SchoolId})</span><br />");
+            //}
+            string fullname = enrollVM.EnrollHeader.FirstName + " " + enrollVM.EnrollHeader.LastName;
+            string messageBody = string.Format(HtmlBody,
+                fullname,
+                enrollVM.EnrollHeader.Email,
+                enrollVM.EnrollHeader.PhoneNumber,
+                SchoolListSB.ToString());
+
+            await _emailSender.SendEmailAsync(WC.EmailAdmin, subject, messageBody);
+
+            return View(enrollVM);
+        }
+
+
         //POST - SaveApplication
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SaveApplication(EnrollUserVM enrollUserVM)
+        public IActionResult SaveApplication(EnrollVM enrollVM)
         {
             if (ModelState.IsValid)
             {
                 //check if header already exists
-                if (enrollUserVM.EnrollHeader.Id == 0)
+                if (enrollVM.EnrollHeader.Id == 0)
                 {
-                    _enrollHeaderRepo.Add(enrollUserVM.EnrollHeader);
+                    _enrollHeaderRepo.Add(enrollVM.EnrollHeader);
                 }
                 else
                 {
-                    _enrollHeaderRepo.FirstOrDefault(u => u.Id == enrollUserVM.EnrollHeader.Id);
-                    _enrollHeaderRepo.Update(enrollUserVM.EnrollHeader);
+                    _enrollHeaderRepo.FirstOrDefault(u => u.Id == enrollVM.EnrollHeader.Id, isTracking: false);
+                    _enrollHeaderRepo.Update(enrollVM.EnrollHeader);
                 }
                 _enrollHeaderRepo.Save();
+
                 //check detail records
 
                 var files = HttpContext.Request.Form.Files;
                 string webRootPath = _webHostEnvironment.WebRootPath;
 
-                if (enrollUserVM.EnrollDetail.Id == 0)
+                if (enrollVM.EnrollDetail.Id == 0)
                 {
                     //Creating
-                    string upload = webRootPath + WC.ConsentForm;
-                    string fileName = Guid.NewGuid().ToString();
-                    string extension = Path.GetExtension(files[0].FileName);
 
-                    using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                    enrollVM.EnrollDetail.EnrollHeaderId = enrollVM.EnrollHeader.Id;
+
+                    //Upload ProfilePhoto
+                    if (enrollVM.ProfileImage.Name == files[0].Name)
                     {
-                        files[0].CopyTo(fileStream);
+                        string uploadPhoto = webRootPath + WC.ProfilePhotoPath;
+                        string fileNamePhoto = Guid.NewGuid().ToString();
+                        string extensionPhoto = Path.GetExtension(files[0].FileName);
+
+                        using (var fileStream = new FileStream(Path.Combine(uploadPhoto, fileNamePhoto + extensionPhoto), FileMode.Create))
+                        {
+                            files[0].CopyTo(fileStream);
+                        }
+                        enrollVM.EnrollDetail.SchoolPhoto = fileNamePhoto + extensionPhoto;
                     }
 
-                    enrollUserVM.EnrollDetail.ConsentForm = fileName + extension;
 
-                    enrollUserVM.EnrollDetail.EnrollStatus = WC.StatusSaved;
+                    if (enrollVM.ConsentForm != null)
+                    {
+                        if (enrollVM.ConsentForm.Name == files[1].Name)
+                        {
+                            string upload = webRootPath + WC.ConsentForm;
+                            string fileName = Guid.NewGuid().ToString();
+                            string extension = Path.GetExtension(files[1].FileName);
 
-                    enrollUserVM.EnrollDetail.LogDate = DateTime.Now;
+                            using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                            {
+                                files[1].CopyTo(fileStream);
+                            }
 
-                    // check if school profile picture was uploaded
-                    //if (Request.Form.Files.Count > 0)
-                    //{
-                    //    IFormFile file = Request.Form.Files.FirstOrDefault();
-                    //    using (var dataStream = new MemoryStream())
-                    //    {
-                    //        file.CopyToAsync(dataStream);
-                    //        enrollUserVM.EnrollDetail.SchoolPhoto = dataStream.ToArray();
-                    //    }
-                    //}
+                            enrollVM.EnrollDetail.ConsentForm = fileName + extension;
+                        }
 
-                    _enrollDetailRepo.Add(enrollUserVM.EnrollDetail);
+                    }
+
+                    enrollVM.EnrollDetail.EnrollDate = DateTime.Now;
+
+                    enrollVM.EnrollDetail.EnrollStatus = WC.StatusSaved;
+
+                    enrollVM.EnrollDetail.LogDate = DateTime.Now;
+
+
+
+                    _enrollDetailRepo.Add(enrollVM.EnrollDetail);
+                    _enrollDetailRepo.Save();
+
+                    // update header record to mark last detail record
+
+                    try
+                    {
+                        _enrollHeaderRepo.FirstOrDefault(u => u.Id == enrollVM.EnrollHeader.Id, isTracking: false);
+                        // make detail record unavailable for for editing
+                        enrollVM.EnrollHeader.DetailRecOpen = true;
+                        // insert detail record ID in Header
+                        enrollVM.EnrollHeader.LastDetailRec = enrollVM.EnrollDetail.Id;
+
+                        _enrollHeaderRepo.Update(enrollVM.EnrollHeader);
+                        _enrollHeaderRepo.Save();
+                    }
+
+                    catch (Exception e)
+                    {
+                        //Console.WriteLine("Exception caught: {0}", e);
+                        TempData[WC.Error] = "Exception caught: {0} " + e;
+                        //TempData[WC.Error] = "Action completed with Error on Header record update ... " + ;
+                        return RedirectToAction("Index", "Home");
+                    }
+
 
                 }
                 else
@@ -367,66 +535,108 @@ namespace Iskul.Controllers
                     //Updating
                     // old code **** var objFromDb = _db.Product.AsNoTracking().FirstOrDefault(u => u.Id == productVM.Product.Id);
                     // no tracking should be set for this object so only one instance of the object will be updated which is ProductVM.Product
-                    var objFromDb = _enrollDetailRepo.FirstOrDefault(u => u.Id == enrollUserVM.EnrollDetail.Id, isTracking: false);
+                    var objFromDb = _enrollDetailRepo.FirstOrDefault(u => u.Id == enrollVM.EnrollDetail.Id, isTracking: false);
 
-                    //check here if new file has been updated for an existing consent form
                     if (files.Count > 0)
                     {
-                        string upload = webRootPath + WC.ConsentForm;
-                        string fileName = Guid.NewGuid().ToString();
-                        string extension = Path.GetExtension(files[0].FileName);
-
-                        var oldFile = Path.Combine(upload, objFromDb.ConsentForm);
-
-                        //delete old file if it exists in the image folder
-                        if (System.IO.File.Exists(oldFile))
+                        if (enrollVM.ProfileImage.Name == files[0].Name)
                         {
-                            System.IO.File.Delete(oldFile);
+                            string uploadPhoto = webRootPath + WC.ProfilePhotoPath;
+                            string fileNamePhoto = Guid.NewGuid().ToString();
+                            string extensionPhoto = Path.GetExtension(files[0].FileName);
+
+                            var oldPhotoFile = Path.Combine(uploadPhoto, objFromDb.SchoolPhoto);
+
+                            //delete old file if it exists in the image folder
+
+                            if (System.IO.File.Exists(oldPhotoFile))
+                            {
+                                System.IO.File.Delete(oldPhotoFile);
+                            }
+                            using (var fileStream = new FileStream(Path.Combine(uploadPhoto, fileNamePhoto + extensionPhoto), FileMode.Create))
+                            {
+                                files[0].CopyTo(fileStream);
+                            }
+                            enrollVM.EnrollDetail.SchoolPhoto = fileNamePhoto + extensionPhoto;
+                        }
+                        //check here if new file has been updated for an existing consent form
+
+                        if (enrollVM.ConsentForm != null)
+                        {
+                            if (enrollVM.ConsentForm.Name == files[1].Name)
+                            {
+                                string upload = webRootPath + WC.ConsentForm;
+                                string fileName = Guid.NewGuid().ToString();
+                                string extension = Path.GetExtension(files[1].FileName);
+
+                                var oldFile = Path.Combine(upload, objFromDb.ConsentForm);
+
+                                //delete old file if it exists in the Consent Form folder
+                                if (System.IO.File.Exists(oldFile))
+                                {
+                                    System.IO.File.Delete(oldFile);
+                                }
+                                using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                                {
+                                    files[1].CopyTo(fileStream);
+                                }
+
+                                enrollVM.EnrollDetail.ConsentForm = fileName + extension;
+                            }
+
                         }
 
-                        using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
-                        {
-                            files[0].CopyTo(fileStream);
-                        }
-
-                        enrollUserVM.EnrollDetail.ConsentForm = fileName + extension;
                     }
                     else
                     {
-                        enrollUserVM.EnrollDetail.ConsentForm = objFromDb.ConsentForm;
+                        enrollVM.EnrollDetail.SchoolPhoto = objFromDb.SchoolPhoto;
+                        enrollVM.EnrollDetail.ConsentForm = objFromDb.ConsentForm;
                     }
 
-                    enrollUserVM.EnrollDetail.EnrollStatus = WC.StatusSaved;
+                    enrollVM.EnrollDetail.EnrollStatus = WC.StatusSaved;
+                    enrollVM.EnrollDetail.EnrollDate = DateTime.Now;
+                    enrollVM.EnrollDetail.LogDate = DateTime.Now;
 
-                    enrollUserVM.EnrollDetail.LogDate = DateTime.Now;
+                    _enrollDetailRepo.Update(enrollVM.EnrollDetail);
 
-                    // check if school profile picture was uploaded
-                    //if (Request.Form.Files.Count > 0)
-                    //{
-                    //    IFormFile file = Request.Form.Files.FirstOrDefault();
-                    //    using (var dataStream = new MemoryStream())
-                    //    {
-                    //        file.CopyToAsync(dataStream);
-                    //        enrollUserVM.EnrollDetail.SchoolPhoto = dataStream.ToArray();
-                    //    }
-                    //}
+                    _enrollDetailRepo.Save();
 
-                    _enrollDetailRepo.Update(enrollUserVM.EnrollDetail);
+                    // update header record to mark last detail record
+
+                    try
+                    {
+                        _enrollHeaderRepo.FirstOrDefault(u => u.Id == enrollVM.EnrollHeader.Id, isTracking: false);
+                        // make detail record unavailable for for editing
+                        enrollVM.EnrollHeader.DetailRecOpen = true;
+                        // insert detail record ID in Header
+                        enrollVM.EnrollHeader.LastDetailRec = enrollVM.EnrollDetail.Id;
+
+                        _enrollHeaderRepo.Update(enrollVM.EnrollHeader);
+                        _enrollHeaderRepo.Save();
+                    }
+
+                    catch (Exception e)
+                    {
+                        //Console.WriteLine("Exception caught: {0}", e);
+                        TempData[WC.Error] = "Exception caught: {0} " + e;
+                        //TempData[WC.Error] = "Action completed with Error on Header record update ... " + ;
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
-                
-                _enrollDetailRepo.Save();
-                TempData[WC.Success] = "Action completed successfully";
+
+                TempData[WC.Success] = "Application saved successfully";
                 return RedirectToAction("Index", "Home");
             }
 
+            
             // if model state is not valid, the view model should be populated again
             //schoolVM.CategorySelectList = _schoolRepo.GetAllDropdownList(WC.CategoryName);
-            enrollUserVM.CivilStatusSelectList = WC.ListCivilStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+            enrollVM.CivilStatusSelectList = WC.ListCivilStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
             {
                 Text = i,
                 Value = i
             });
-            return View(enrollUserVM);
+            return View("Index", enrollVM);
         }
 
     }

@@ -15,8 +15,10 @@ namespace Iskul_Models.ViewModels
         //{
         //    ProductList = new List<Product>();
         //}
-        public string AppUserId { get; set; }
+
         //public IList<Product> ProductList { get; set; }
+
+        public string AppUserId { get; set; }
         public int SchoolId { get; set; }
         public string SchoolName { get; set; }
         public string SchoolImage { get; set; }
