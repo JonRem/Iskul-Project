@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,11 +18,14 @@ namespace Iskul_Models
         public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]
         public ApplicationUser ApplicationUser { get; set; }
-        [DisplayName("Enroll Date")]
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
-        [Required]
-        public DateTime EnrollDate { get; set; }
+
+        [Display(Name = "School Id")]
+        public int SchoolId { get; set; }
+
+        [ForeignKey("SchoolId")]
+        public School School { get; set; }
+
+        
         [DisplayName("Phone Number")]
         [Required]
         public string PhoneNumber { get; set; }
@@ -38,5 +42,10 @@ namespace Iskul_Models
         [RegularExpression(@"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}", ErrorMessage = "Please enter correct email")]
         [DisplayName("Email Address")]
         public string Email { get; set; }
+
+        [Required]
+        public bool DetailRecOpen { get; set; } = true;    // true if open for enrollment, false if closed
+        [AllowNull]
+        public int LastDetailRec { get; set; }     // last recorded detail record id (if any)
     }
 }

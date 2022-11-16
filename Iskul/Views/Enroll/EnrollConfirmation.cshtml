@@ -1,0 +1,25 @@
+﻿@model Iskul_Models.ViewModels.EnrollVM
+
+<div class="text-center">
+
+    @if (Model != null)
+    {
+        <h1 class="text-info"> Application Created</h1>
+        <p>Application #@Model.EnrollHeader.Id has been created successfully</p>
+    }
+    else
+    {
+        <h1 class="text-info">Application Confirmation</h1>
+
+        <p>We have received your Enrollment Application and someone from our team will contact you shortly!</p>
+        <p>A confirmation email was sent to your registered email address.</p>
+    }
+    <img src="/images/ApplicationSubmitted.png" width="80%" />
+    <div class="form-group row py-2">
+        <div class="col-md-12 row text-center">
+            <div class="col">
+                <a asp-action="Index" asp-controller="Home" class="btn btn-secondary w-100"><i class="fas fa-sign-out-alt"></i> Back to Home Page</a>
+            </div>
+        </div>
+    </div>
+</div>

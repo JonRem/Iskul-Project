@@ -80,6 +80,9 @@ namespace Iskul_DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("EnrollDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("EnrollHeaderId")
                         .HasColumnType("int");
 
@@ -105,9 +108,6 @@ namespace Iskul_DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SchoolId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SchoolPhoto")
                         .HasColumnType("nvarchar(max)");
 
@@ -118,8 +118,6 @@ namespace Iskul_DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EnrollHeaderId");
-
-                    b.HasIndex("SchoolId");
 
                     b.ToTable("EnrollDetail");
                 });
@@ -135,17 +133,20 @@ namespace Iskul_DataAccess.Migrations
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("DetailRecOpen")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("EnrollDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LastDetailRec")
+                        .HasColumnType("int");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -155,9 +156,14 @@ namespace Iskul_DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SchoolId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("SchoolId");
 
                     b.ToTable("EnrollHeader");
                 });
@@ -439,15 +445,7 @@ namespace Iskul_DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Iskul_Models.School", "School")
-                        .WithMany()
-                        .HasForeignKey("SchoolId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("EnrollHeader");
-
-                    b.Navigation("School");
                 });
 
             modelBuilder.Entity("Iskul_Models.EnrollHeader", b =>
@@ -456,7 +454,15 @@ namespace Iskul_DataAccess.Migrations
                         .WithMany()
                         .HasForeignKey("ApplicationUserId");
 
+                    b.HasOne("Iskul_Models.School", "School")
+                        .WithMany()
+                        .HasForeignKey("SchoolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ApplicationUser");
+
+                    b.Navigation("School");
                 });
 
             modelBuilder.Entity("Iskul_Models.School", b =>

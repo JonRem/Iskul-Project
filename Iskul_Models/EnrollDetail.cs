@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -20,11 +21,11 @@ namespace Iskul_Models
         [ForeignKey("EnrollHeaderId")]
         public EnrollHeader EnrollHeader { get; set; }
 
-        [Display(Name = "School Id")]
-        public int SchoolId { get; set; }
-
-        [ForeignKey("SchoolId")]
-        public School School { get; set; }
+        [DisplayName("Enroll Date")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        [Required]
+        public DateTime EnrollDate { get; set; }
 
         [Required]
         [DataType(DataType.DateTime)]
@@ -83,6 +84,7 @@ namespace Iskul_Models
         [Display(Name = "Emergency Contact Number")]
         public string EmergencyContactNo { get; set; }
         public string EnrollStatus { get; set; }  // Saved, Pending, Approved, Processing, Cancelled, Disapproved
+
 
         //[Required(ErrorMessage = "Please choose Profile Photo")]
         //[Display(Name = "Profile Photo")]
