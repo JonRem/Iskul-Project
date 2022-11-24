@@ -23,6 +23,7 @@ using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Identity;
 using Syncfusion.EJ2.Charts;
 using Syncfusion.EJ2.Inputs;
+using Newtonsoft.Json.Schema;
 
 namespace Iskul.Controllers
 {
@@ -36,7 +37,7 @@ namespace Iskul.Controllers
         private readonly IApplicationUserRepository _userRepo;
         private readonly ISchoolRepository _schoolRepo;
 
-        
+
 
         [BindProperty]
         public EnrollVM EnrollVM { get; set; }
@@ -175,7 +176,8 @@ namespace Iskul.Controllers
         //POST - UPSERT
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(EnrollVM enrollVM)
+        public async Task<IActionResult> Upsert(EnrollVM enrollVM)
+        //public IActionResult Upsert(EnrollVM enrollVM)
         {
             //if (Request.Form.Files.Count > 0)
             //{
@@ -295,20 +297,28 @@ namespace Iskul.Controllers
                             string fileNamePhoto = Guid.NewGuid().ToString();
                             string extensionPhoto = Path.GetExtension(files[0].FileName);
 
-                            var oldPhotoFile = Path.Combine(uploadPhoto, objFromDb.SchoolPhoto);
-
-                            //delete old file if it exists in the image folder
-
-                            if (System.IO.File.Exists(oldPhotoFile))
+                            if (files[0].FileName != objFromDb.SchoolPhoto)
                             {
-                                System.IO.File.Delete(oldPhotoFile);
+                                var oldPhotoFile = Path.Combine(uploadPhoto, objFromDb.SchoolPhoto);
+
+                                //delete old file if it exists in the image folder
+
+                                if (System.IO.File.Exists(oldPhotoFile))
+                                {
+                                    System.IO.File.Delete(oldPhotoFile);
+                                }
+                                using (var fileStream = new FileStream(Path.Combine(uploadPhoto, fileNamePhoto + extensionPhoto), FileMode.Create))
+                                {
+                                    files[0].CopyTo(fileStream);
+                                }
+                                enrollVM.EnrollDetail.SchoolPhoto = fileNamePhoto + extensionPhoto;
                             }
-                            using (var fileStream = new FileStream(Path.Combine(uploadPhoto, fileNamePhoto + extensionPhoto), FileMode.Create))
+                            else
                             {
-                                files[0].CopyTo(fileStream);
+                                enrollVM.EnrollDetail.SchoolPhoto = objFromDb.SchoolPhoto;
                             }
-                            enrollVM.EnrollDetail.SchoolPhoto = fileNamePhoto + extensionPhoto;
                         }
+
                         //check here if new file has been updated for an existing consent form
 
                         if (enrollVM.ConsentForm != null)
@@ -319,23 +329,48 @@ namespace Iskul.Controllers
                                 string fileName = Guid.NewGuid().ToString();
                                 string extension = Path.GetExtension(files[1].FileName);
 
-                                var oldFile = Path.Combine(upload, objFromDb.ConsentForm);
+                                
+                                if (objFromDb.ConsentForm != null)
+                                {
+                                    if (enrollVM.EnrollDetail.ConsentForm != objFromDb.ConsentForm)
+                                    {
+                                        var oldFile = Path.Combine(upload, objFromDb.ConsentForm);
+                                        //delete old file if it exists in the Consent Form folder
+                                        if (System.IO.File.Exists(oldFile))
+                                        {
+                                            System.IO.File.Delete(oldFile);
+                                        }
+                                    }   
+                                }
+                                //create
+                                using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                                {
+                                    files[1].CopyTo(fileStream);
+                                }
+                                enrollVM.EnrollDetail.ConsentForm = fileName + extension;
+                            }
+                        }
+                        else
+                        {
+                            // check if consent form previously exist then delete old consent form
+                            string upload = webRootPath + WC.ConsentForm;
+                            string fileName = Guid.NewGuid().ToString();
+                            string extension = Path.GetExtension(files[1].FileName);
 
+
+                            if (objFromDb.ConsentForm != null)
+                            {
+                                var oldFile = Path.Combine(upload, objFromDb.ConsentForm);
                                 //delete old file if it exists in the Consent Form folder
                                 if (System.IO.File.Exists(oldFile))
                                 {
                                     System.IO.File.Delete(oldFile);
                                 }
-                                using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
-                                {
-                                    files[1].CopyTo(fileStream);
-                                }
+                                enrollVM.EnrollDetail.ConsentForm = "";
 
-                                enrollVM.EnrollDetail.ConsentForm = fileName + extension;
+
                             }
-
                         }
-
                     }
                     else
                     {
@@ -375,8 +410,47 @@ namespace Iskul.Controllers
                 }
                 
                 TempData[WC.Success] = "Action completed successfully";
-                //return RedirectToAction("Index", "Home");
-                return RedirectToAction("EnrollConfirmation", enrollVM);
+                
+                // send confirmation email
+
+                var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
+              + "templates" + Path.DirectorySeparatorChar.ToString() +
+              "EnrollApplication.html";
+
+                var subject = "New Application";
+                string HtmlBody = "";
+                using (StreamReader sr = System.IO.File.OpenText(PathToTemplate))
+                {
+                    HtmlBody = sr.ReadToEnd();
+                }
+
+                //Name: {0}
+                //Email: { 1}
+                //Phone: { 2}
+                //Enrollment Date: {3}
+                //School: { 4}
+
+                StringBuilder SchoolListSB = new StringBuilder();
+                //foreach (var prod in enrollVM.SchoolId)
+                //{
+                //SchoolListSB.Append($" - Name: {enrollVM.SchoolName} <span style='font-size:14px;'> (ID: {enrollVM.SchoolId})</span><br />");
+                //}
+                String SchoolInfo = " - Name: " + enrollVM.SchoolName + " " + "<span style='font-size:14px;'> (ID: " + enrollVM.SchoolId.ToString() + ")</span><br />";
+                string fullname = enrollVM.EnrollHeader.FirstName + " " + enrollVM.EnrollHeader.LastName;
+                string eDate = enrollVM.EnrollDetail.EnrollDate.ToShortDateString();
+                string messageBody = string.Format(HtmlBody,
+                    fullname,
+                    enrollVM.EnrollHeader.Email,
+                    enrollVM.EnrollHeader.PhoneNumber,
+                    eDate,
+                    SchoolInfo);
+                    //SchoolListSB.ToString());
+
+                await _emailSender.SendEmailAsync(WC.EmailAdmin, subject, messageBody);
+
+                return View("EnrollConfirmation", enrollVM);
+
+                
             }
 
             // if model state is not valid, the view model should be populated again
@@ -390,13 +464,18 @@ namespace Iskul.Controllers
             return View("Index", enrollVM);
         }
 
+        
+
         // Enrollment Confirmation
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        [ActionName("EnrollConfirmation")]
-        public async Task<IActionResult> EnrollConfirmationAsync(EnrollVM enrollVM)
+        //[ActionName("EnrollConfirmation")]
+        public async Task<IActionResult> EnrollConfirmation()
         {
-            // ww need to confirmation email
+            // we need to send confirmation email
+            //var objFromDb = _enrollHeaderRepo.FirstOrDefault(u => u.Id == EnrollVM.EnrollHeader.Id, isTracking: false);
+            //var objSchoolDb = _schoolRepo.FirstOrDefault(u => u.Id == objFromDb.SchoolId, isTracking: false);
+
             var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
               + "templates" + Path.DirectorySeparatorChar.ToString() +
               "Inquiry.html";
@@ -417,18 +496,19 @@ namespace Iskul.Controllers
             StringBuilder SchoolListSB = new StringBuilder();
             //foreach (var prod in enrollVM.SchoolId)
             //{
-            SchoolListSB.Append($" - Name: {enrollVM.SchoolName} <span style='font-size:14px;'> (ID: {enrollVM.SchoolId})</span><br />");
+            SchoolListSB.Append($" - Name: {EnrollVM.SchoolName} <span style='font-size:14px;'> (ID: {EnrollVM.SchoolId})</span><br />");
             //}
-            string fullname = enrollVM.EnrollHeader.FirstName + " " + enrollVM.EnrollHeader.LastName;
+            string fullname = EnrollVM.EnrollHeader.FirstName + " " + EnrollVM.EnrollHeader.LastName;
             string messageBody = string.Format(HtmlBody,
                 fullname,
-                enrollVM.EnrollHeader.Email,
-                enrollVM.EnrollHeader.PhoneNumber,
+                EnrollVM.EnrollHeader.Email,
+                EnrollVM.EnrollHeader.PhoneNumber,
                 SchoolListSB.ToString());
 
             await _emailSender.SendEmailAsync(WC.EmailAdmin, subject, messageBody);
-
-            return View(enrollVM);
+            //var obj = _emailSender.SendEmailAsync(WC.EmailAdmin, subject, messageBody);
+            
+            return View(EnrollVM);
         }
 
 

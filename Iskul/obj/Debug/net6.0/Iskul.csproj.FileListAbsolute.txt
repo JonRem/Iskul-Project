@@ -567,3 +567,4 @@ C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\bin\Debug\net6.
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\jrem7_000\Documents\Dotnet-Core-MVC\Iskul Project\Iskul\bin\Debug\net6.0\libman.json

@@ -1,5 +1,6 @@
 ﻿@model Iskul_Models.ViewModels.EnrollVM
 @using Iskul_Utility
+<link href="~/jqueryui/jquery-ui.css" rel="stylesheet" />
 
 <form method="post" enctype="multipart/form-data" id="enroll">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -13,8 +14,11 @@
     <input asp-for="@Model.EnrollHeader.SchoolId" hidden />
     <input asp-for="@Model.EnrollHeader.DetailRecOpen" hidden />
     <input asp-for="@Model.EnrollHeader.LastDetailRec" hidden />
+    <input asp-for="@Model.EnrollDetail.Id" hidden />
     <input asp-for="@Model.EnrollDetail.EnrollHeaderId" hidden />
-    @*<input asp-for="@Model.EnrollDetail.SchoolPhoto" hidden />*@
+    @*<input asp-for="@Model.EnrollDetail.DateofBirth" hidden />*@
+    <input asp-for="@Model.EnrollDetail.SchoolPhoto" hidden />
+    <input asp-for="@Model.EnrollDetail.ConsentForm" hidden />
     <input asp-for="@Model.EnrollDetail.EnrollStatus" hidden />
     <input asp-for="@Model.CivilStatusSelectList" hidden />
     <input asp-for="@Model.ProfileImage" hidden />
@@ -143,7 +147,8 @@
                     <label asp-for="@Model.EnrollDetail.DateofBirth"></label>
                 </div>
                 <div class="col-6">
-                    <input id="DateofBirth" asp-for="@Model.EnrollDetail.DateofBirth" type="date" asp-format="{0:MM/dd/yyyy}"  class="form-control" />
+                    @*<input id="DateofBirth" asp-for="@Model.EnrollDetail.DateofBirth" type="date" asp-format="{0:MM/dd/yyyy}"  class="form-control js-picker" />*@
+                    <input id="DateofBirth" asp-for="@Model.EnrollDetail.DateofBirth" type="text" asp-format="{0:MM/dd/yyyy}" value="@Model.EnrollDetail.DateofBirth.ToShortDateString()" class="form-control" />
                     <span asp-validation-for="@Model.EnrollDetail.DateofBirth" class="text-danger"></span>
                 </div>
                 <div class="form-group row py-2">
@@ -364,37 +369,37 @@
                 {
                 // update
                     // <input type="submit" class="btn btn-info w-100" asp-action="Upsert" value="Update Application" />
-                    int age = 0;
+                   @* int age = 0;
                     age = DateTime.Now.Subtract(Model.EnrollDetail.DateofBirth).Days;
                     age = age / 365;
 
                     if (age < 18)
-                    {
+                    {*@
                         <input type="submit" onclick="return validateInput()" class="btn btn-success w-100" asp-action="Upsert" value="Update & Submit Application" />
 
-                    }
+                    @*}
                     else
                     {
                         <input type="submit" class="btn btn-success w-100" asp-action="Upsert" value="Update & Submit Application" />
-                    }
+                    }*@
 
                 }
                 else
                 {
                     // create
-                    int age = 0;
+                    @*int age = 0;
                     age = DateTime.Now.Subtract(Model.EnrollDetail.DateofBirth).Days;
                     age = age / 365;
 
                     if (age < 18)
-                    {
+                    {*@
                         <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100" asp-action="Upsert" value="Submit Application" />
 
-                    }
+                    @*}
                     else
                     {
                         <input type="submit" class="btn btn-primary w-100" aria-pressed="true" asp-action="Upsert" value="Submit Application" />
-                    }
+                    }*@
                 }
 
             </div>
@@ -408,10 +413,11 @@
 </form>
 
 @section Scripts{
-
+    
     @{
     <partial name="_ValidationScriptsPartial" />
     }
+    <script src="~/jqueryui/jquery-ui.js"></script>
     <script>
         $(document).ready(function () {
             $('.summernote').summernote({
@@ -431,6 +437,13 @@
         //    };
            
         //});
+        //$(function () {
+        //    $("#DateofBirth").datepicker();
+        //});
+        $(function () {
+            $("#DateofBirth").datepicker({ dateFormat: 'mm/dd/yy' });
+        });
+
         function validateInput() {
             if (document.getElementById("uploadBox").value == "") {
                 var birthday = document.getElementById("DateofBirth").value;
