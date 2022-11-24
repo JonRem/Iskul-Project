@@ -20,7 +20,7 @@ namespace Iskul_Utility
         public const string AdminRole = "Admin";
         public const string CustomerRole = "Customer";
 
-        public const string EmailAdmin = "jrem7@yahoo.com";
+        public const string EmailAdmin = "asgardicafe@gmail.com";
 
         public const string CategoryName = "Category";
 

@@ -43,7 +43,7 @@ namespace Iskul_Utility
        "From",
        new JObject {
         {"Email", "bliss.store@protonmail.com"},
-        {"Name", "Eriberto"}
+        {"Name", "Jon"}
        }
       }, {
        "To",
@@ -54,7 +54,7 @@ namespace Iskul_Utility
           email
          }, {
           "Name",
-          "Bliss Store"
+          "Iskul"
          }
         }
        }
@@ -64,7 +64,7 @@ namespace Iskul_Utility
       }, {
        "HTMLPart",
        body
-      }, 
+      },
      }
              });
             await client.PostAsync(request);
