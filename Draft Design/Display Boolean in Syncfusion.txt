@@ -1,0 +1,70 @@
+Query: I have a field that is true/false. I want to Display Passed/Failed instead. I also want the field to show Passed/Failed on pdf and excel export 
+ 
+We have validated your query at our end. You can achieve your requirement by using valueAccessor property of EJ2 Grid’s Column. 
+ 
+By using valueAccessor, you can customize the data as you want in the Grid column. But, this is used only for the display purpose. All the Grid actions like Filtering, Searching, Sorting, etc., are performed based on the value in the Grid’s dataSource. Find the below code example and documentation for more information. 
+ 
+valueAccessor: https://ej2.syncfusion.com/aspnetcore/documentation/grid/columns/#valueaccessor 
+ 
+ 
+[index.cshtml] 
+ 
+@{ 
+    var valueAccessor = "valueAccessorFn"; 
+} 
+ 
+<ejs-grid id="Grid" dataSource="@ViewBag.DataSource" allowFiltering="true" allowExcelExport="true" allowPdfExport="true" toolbar="@(new List<string>() { "PdfExport", "ExcelExport" })" toolbarClick="toolbarClick" > 
+    <e-grid-filterSettings type="Excel"></e-grid-filterSettings> 
+    <e-grid-columns> 
+        <e-grid-column field="OrderID" headerText="Order ID" width="150"></e-grid-column> 
+        <e-grid-column field="CustomerID" headerText="Customer ID" width="150"></e-grid-column> 
+        <e-grid-column field="Verified" headerText="Status" valueAccessor="valueAccessor" width="150" filter="@(new { itemTemplate="#itemTemplate" })" allowEditing="false"></e-grid-column> 
+        <e-grid-column field="ShipCountry" headerText="Ship Country" width="150"></e-grid-column> 
+    </e-grid-columns> 
+</ejs-grid> 
+ 
+--- 
+<script> 
+    function valueAccessorFn(field, data, column) { 
+        var value = data[field] 
+        if (value) { 
+            return "Passed" 
+        } else { 
+            return "Failed" 
+        } 
+    } 
+</script> 
+ 
+ 
+The same value returned from the valueAccessor will be exported to the excel and pdf file. 
+ 
+Query #2: Also, the filter should display Passed/Failed instead of true false. 
+  
+By using filterItemTemplate, you can customize the filter choice text as you want. Refer to the below code example for more information. 
+ 
+[index.cshtml] 
+ 
+<ejs-grid id="Grid" dataSource="@ViewBag.DataSource" allowFiltering="true" allowExcelExport="true" allowPdfExport="true" toolbar="@(new List<string>() { "PdfExport", "ExcelExport" })" toolbarClick="toolbarClick" > 
+    <e-grid-filterSettings type="Excel"></e-grid-filterSettings> 
+    <e-grid-columns> 
+        <e-grid-column field="OrderID" headerText="Order ID" width="150"></e-grid-column> 
+        <e-grid-column field="CustomerID" headerText="Customer ID" width="150"></e-grid-column> 
+        <e-grid-column field="Verified" headerText="Status" valueAccessor="valueAccessor" width="150" filter="@(new { itemTemplate="#itemTemplate" })" allowEditing="false"></e-grid-column> 
+        <e-grid-column field="ShipCountry" headerText="Ship Country" width="150"></e-grid-column> 
+    </e-grid-columns> 
+</ejs-grid> 
+ 
+ 
+<script id="itemTemplate" type="text/x-template"> 
+    <div> 
+        ${if(Verified)} 
+        <span>Passed</span> ${else} 
+        <span>Failed</span> 
+        ${/if} 
+    </div> 
+</script> 
+ 
+ 
+We have prepared a sample for your reference. You can get it from the below link, 
+ 
+Sample: https://www.syncfusion.com/downloads/support/directtrac/general/ze/core_grid_valueaccessor_fltitemtemp-1949449316.zip 

@@ -1,0 +1,130 @@
+﻿@model Iskul_Models.ViewModels.EnrollDataVM
+
+
+
+<form method="get">
+    <input asp-for="@Model.ApplicationStatusList" hidden />
+    <input asp-for="@Model.EnrollHeader.Id" hidden />
+
+    <div class="container p-4 my-3">
+        <h2 class="text-info">Enrollment Application for:</h2>
+        <div class="border bg-primary p-3" style="border-radius:15px;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row" style="padding-top:10px">
+                        <div class="col-12">
+                            <h3 class="=text-info">School:  @Model.EnrollHeader.School.SchoolName</h3>
+                        </div>
+                    </div>
+                    <div class="row pt-1">
+                        <div class="col-8">
+                            <h4 class="=text-info">Student Name: @Model.EnrollHeader.FirstName.Trim() @Model.EnrollHeader.LastName.Trim()</h4>
+                        </div>
+                    </div>
+                    <div class="row pt-1">
+                        <div class="col-6">
+                            <h4 class="=text-info">Phone Number: @Model.EnrollHeader.PhoneNumber</h4>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="=text-info">Email: @Model.EnrollHeader.Email</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="container p-4 my-3">
+        <h2 class="text-info">Enrollment Details</h2>
+        <div class="border bg-white p-3" style="border-radius:15px;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row" style="padding-top:10px">
+                        <div class="col-4">
+                            @Html.DropDownListFor(u=>u.EnrollStatus, Model.ApplicationStatusList,"--Application Status--",new {@class="form-select" })
+                        </div>
+                        <div class="offset-4 col-4">
+                            <button type="submit" class="h-100 btn btn-info form-control">
+                                <i class="fas fa-search"></i>Search
+                            </button>
+                        </div>
+                    </div>
+                        
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+@*@{ 
+    var valueAccessor = "valueAccessorFn"; 
+} *@
+
+
+
+
+                    
+<div class="bg-white p-3">
+    @*<ejs-grid id="GridOverview" allowFiltering="true" allowSorting="true" height="600" rowHeight="38" enableHover="false" load="load" queryCellInfo="queryCellInfo" dataBound="startTimer" actionComplete="complete" enableVirtualization="true" allowSelection="true">*@
+    <ejs-grid id="Grid" dataSource="@Model.EnrollDetailList" allowFiltering="true" allowSorting="true" allowPaging="true">
+        <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
+        <e-grid-pagesettings pageSize="5"></e-grid-pagesettings>
+        @*<e-grid-selectionsettings persistSelection="true" type="Multiple" checkboxOnly="true"></e-grid-selectionsettings>*@
+        <e-grid-columns>
+            <e-grid-column field="Id" headerText="ID" isPrimaryKey="true" textAlign="Right" width="100"></e-grid-column>
+            <e-grid-column field="EnrollDate" headerText="Enroll Date" customFormat="@(new { type = "date", format = "MM/dd/yyyy" })" textAlign="Right"></e-grid-column>
+            <e-grid-column field="DateofBirth" headerText="Birth Date" customFormat="@(new { type = "date", format = "MM/dd/yyyy" })" textAlign="Right"></e-grid-column>
+            <e-grid-column field="Address" headerText="Address" textAlign="Right"></e-grid-column>
+            <e-grid-column field="City" headerText="City" textAlign="Right"></e-grid-column>
+            <e-grid-column field="Province" headerText="Province" textAlign="Right"></e-grid-column>
+            <e-grid-column field="EnrollStatus" headerText="Status" textAlign="Right"></e-grid-column>
+
+            <e-grid-column field="Id" headerText="" width="70"
+                           template="<a rel='nofollow' href='EnrollEval/AppDetails/${Id}' class='btn btn-primary'> <i class='fas fa-list'></i></a>"></e-grid-column>
+
+
+            @*<e-grid-column field="Employees" headerText="Employee Name" filter="@(new { type="CheckBox"})" clipMode="EllipsisWithTooltip" template="#empTemplate" width="200"></e-grid-column>
+            <e-grid-column field="Designation" headerText="Designation" filter="@(new { type="CheckBox"})" clipMode="EllipsisWithTooltip" width="170"></e-grid-column>
+            <e-grid-column field="Mail" headerText="Mail" filter="@(new { type="Menu"})" width="230"></e-grid-column>
+            <e-grid-column field="Location" headerText="Location" template="#coltemplate" filter="@(new { type="CheckBox"})" width="140"></e-grid-column>
+            <e-grid-column field="Status" headerText="Status" template="#statusTemplate" filter="@(new { type="CheckBox", itemTemplate="#StatusItemTemp" })" width="150"></e-grid-column>
+            <e-grid-column field="Trustworthiness" headerText="Trustworthiness" filter="@(new { type="CheckBox", itemTemplate="${ trustTemp(data) }"})" template="#trustTemplate" width="200"></e-grid-column>
+            <e-grid-column field="Rating" headerText="Rating" filter="@(new { type="CheckBox", itemTemplate="<div>${ratingDetail(data)}</div>"})" template="#ratingTemplate" width="160"></e-grid-column>
+            <e-grid-column field="Software" headerText="Software" allowSorting="false" allowFiltering="false" template="#progessTemplate" width="180"></e-grid-column>
+            <e-grid-column field="CurrentSalary" headerText="Current Salary" filter="@(new { type="Menu"})" format="C2" textAlign="Right" width="160"></e-grid-column>
+            <e-grid-column field="Address" headerText="Address" filter="@(new { type="Menu"})" width="240"></e-grid-column>*@
+        </e-grid-columns>
+    </ejs-grid>
+</div>
+<div class="card-footer bg-dark">
+    <div class="row">
+        <div class="col-12 col-md-6 pb-1 ">
+            <a asp-action="Index" class="btn btn-success btn-square form-control btn-lg active" aria-pressed="true" style="height:50px;">Back to List</a>
+        </div>
+    </div>
+</div>
+
+
+ @section Scripts{
+    <script>
+        function valueAccessorFn(field, data, column) {
+            var value = data[field]
+            if (value) {
+                return "Open"
+            } else {
+                return "Closed"
+            }
+        }
+    </script>
+    <script id="itemTemplate" type="text/x-template">
+
+        <div>
+            ${if(DetailRecOpen)}
+            <span>Open</span> ${else}
+            <span>Closed</span>
+            ${/if}
+        </div>
+    </script>
+
+ }

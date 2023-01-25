@@ -148,6 +148,14 @@
                 </div>
                 <div class="col-6">
                     @*<input id="DateofBirth" asp-for="@Model.EnrollDetail.DateofBirth" type="date" asp-format="{0:MM/dd/yyyy}"  class="form-control js-picker" />*@
+                    @*@if (Model.EnrollDetail.DateofBirth.ToShortDateString() != "1/1/0001")
+                    {
+                        <input id="DateofBirth" asp-for="@Model.EnrollDetail.DateofBirth" type="text" asp-format="{0:MM/dd/yyyy}" value="@Model.EnrollDetail.DateofBirth.ToShortDateString()" class="form-control" />
+                    }
+                    else
+                    {
+                        <input id="DateofBirth" asp-for="@Model.EnrollDetail.DateofBirth" type="text" asp-format="{0:MM/dd/yyyy}" value="MM/dd/yyyy" class="form-control" />
+                    }*@
                     <input id="DateofBirth" asp-for="@Model.EnrollDetail.DateofBirth" type="text" asp-format="{0:MM/dd/yyyy}" value="@Model.EnrollDetail.DateofBirth.ToShortDateString()" class="form-control" />
                     <span asp-validation-for="@Model.EnrollDetail.DateofBirth" class="text-danger"></span>
                 </div>
@@ -441,12 +449,21 @@
         //    $("#DateofBirth").datepicker();
         //});
         $(function () {
-            $("#DateofBirth").datepicker({ dateFormat: 'mm/dd/yy' });
+            //$("#DateofBirth").datepicker({ dateFormat: 'mm/dd/yy' });
+            $("#DateofBirth").datepicker();
         });
 
         function validateInput() {
             if (document.getElementById("uploadBox").value == "") {
                 var birthday = document.getElementById("DateofBirth").value;
+                //if (birthday = "1/1/0001" || birthday = "MM/dd/yyyy")
+                //{
+                //    Swal.fire(
+                //        'Error,
+                //        'Please enter a valid Date of Birth!",
+                //        'error')
+                //    return false;
+                //}
                 return dobValidate(birthday);
                 //Swal.fire(
                 //    'Error',
@@ -502,7 +519,7 @@
             if ((age == 18 && age_month <= 0 && age_day <= 0) || age < 18) {
                 //alert("Please upload Parental Consent Form for Students below 18 years of age!");
                 Swal.fire(
-                    'Error',
+                    'Notice',
                     'Please upload Parental Consent Form for Students below 18 years of age!',
                     'error'
                 )
