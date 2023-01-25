@@ -119,7 +119,7 @@ namespace Iskul.Controllers
                             EnrollDate = DateTime.Now,
                             LogDate = DateTime.Now,
                             DateofBirth = DateTime.Now,
-                            SchoolPhoto = WC.NoImageAvailable,
+                            //SchoolPhoto = WC.NoImageAvailable,
                             EnrollStatus = WC.StatusPending
                         },
                         CivilStatusSelectList = WC.ListCivilStatus.ToList().Select(i => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
@@ -158,7 +158,7 @@ namespace Iskul.Controllers
                     EnrollDate = DateTime.Now,
                     LogDate = DateTime.Now,
                     DateofBirth = DateTime.Now,
-                    SchoolPhoto =  WC.NoImageAvailable,
+                    //SchoolPhoto =  WC.NoImageAvailable,
                     EnrollStatus = WC.StatusPending
                 },
 
@@ -215,37 +215,43 @@ namespace Iskul.Controllers
                     enrollVM.EnrollDetail.EnrollHeaderId = enrollVM.EnrollHeader.Id;
 
                     //Upload ProfilePhoto
-                    if (enrollVM.ProfileImage.Name == files[0].Name)
+                    if (files.Count > 0)
                     {
-                        string uploadPhoto = webRootPath + WC.ProfilePhotoPath;
-                        string fileNamePhoto = Guid.NewGuid().ToString();
-                        string extensionPhoto = Path.GetExtension(files[0].FileName);
-
-                        using (var fileStream = new FileStream(Path.Combine(uploadPhoto, fileNamePhoto + extensionPhoto), FileMode.Create))
+                        if (enrollVM.ProfileImage != null)
                         {
-                            files[0].CopyTo(fileStream);
-                        }
-                        enrollVM.EnrollDetail.SchoolPhoto = fileNamePhoto + extensionPhoto;
-                    }
-                    
-
-                    if (enrollVM.ConsentForm != null)
-                    {
-                        if (enrollVM.ConsentForm.Name == files[1].Name)
-                        {
-                            string upload = webRootPath + WC.ConsentForm;
-                            string fileName = Guid.NewGuid().ToString();
-                            string extension = Path.GetExtension(files[1].FileName);
-
-                            using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                            if (enrollVM.ProfileImage.Name == files[0].Name)
                             {
-                                files[1].CopyTo(fileStream);
+                                string uploadPhoto = webRootPath + WC.ProfilePhotoPath;
+                                string fileNamePhoto = Guid.NewGuid().ToString();
+                                string extensionPhoto = Path.GetExtension(files[0].FileName);
+
+                                using (var fileStream = new FileStream(Path.Combine(uploadPhoto, fileNamePhoto + extensionPhoto), FileMode.Create))
+                                {
+                                    files[0].CopyTo(fileStream);
+                                }
+                                enrollVM.EnrollDetail.SchoolPhoto = fileNamePhoto + extensionPhoto;
+                            }
+                        }
+
+                        if (enrollVM.ConsentForm != null)
+                        {
+                            if (enrollVM.ConsentForm.Name == files[1].Name)
+                            {
+                                string upload = webRootPath + WC.ConsentForm;
+                                string fileName = Guid.NewGuid().ToString();
+                                string extension = Path.GetExtension(files[1].FileName);
+
+                                using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                                {
+                                    files[1].CopyTo(fileStream);
+                                }
+
+                                enrollVM.EnrollDetail.ConsentForm = fileName + extension;
                             }
 
-                            enrollVM.EnrollDetail.ConsentForm = fileName + extension;
                         }
-                            
                     }
+                    
 
                     enrollVM.EnrollDetail.EnrollDate = DateTime.Now;
 
@@ -291,14 +297,14 @@ namespace Iskul.Controllers
 
                     if (files.Count > 0)
                     {
-                        if (enrollVM.ProfileImage.Name == files[0].Name)
+                        if (enrollVM.ProfileImage != null)
                         {
-                            string uploadPhoto = webRootPath + WC.ProfilePhotoPath;
-                            string fileNamePhoto = Guid.NewGuid().ToString();
-                            string extensionPhoto = Path.GetExtension(files[0].FileName);
-
-                            if (files[0].FileName != objFromDb.SchoolPhoto)
+                            if (enrollVM.ProfileImage.Name == files[0].Name)
                             {
+                                string uploadPhoto = webRootPath + WC.ProfilePhotoPath;
+                                string fileNamePhoto = Guid.NewGuid().ToString();
+                                string extensionPhoto = Path.GetExtension(files[0].FileName);
+
                                 var oldPhotoFile = Path.Combine(uploadPhoto, objFromDb.SchoolPhoto);
 
                                 //delete old file if it exists in the image folder
@@ -312,12 +318,10 @@ namespace Iskul.Controllers
                                     files[0].CopyTo(fileStream);
                                 }
                                 enrollVM.EnrollDetail.SchoolPhoto = fileNamePhoto + extensionPhoto;
-                            }
-                            else
-                            {
-                                enrollVM.EnrollDetail.SchoolPhoto = objFromDb.SchoolPhoto;
+
                             }
                         }
+                        
 
                         //check here if new file has been updated for an existing consent form
 
@@ -328,19 +332,15 @@ namespace Iskul.Controllers
                                 string upload = webRootPath + WC.ConsentForm;
                                 string fileName = Guid.NewGuid().ToString();
                                 string extension = Path.GetExtension(files[1].FileName);
-
-                                
+                                                                
                                 if (objFromDb.ConsentForm != null)
                                 {
-                                    if (enrollVM.EnrollDetail.ConsentForm != objFromDb.ConsentForm)
+                                    var oldFile = Path.Combine(upload, objFromDb.ConsentForm);
+                                    //delete old file if it exists in the Consent Form folder
+                                    if (System.IO.File.Exists(oldFile))
                                     {
-                                        var oldFile = Path.Combine(upload, objFromDb.ConsentForm);
-                                        //delete old file if it exists in the Consent Form folder
-                                        if (System.IO.File.Exists(oldFile))
-                                        {
-                                            System.IO.File.Delete(oldFile);
-                                        }
-                                    }   
+                                        System.IO.File.Delete(oldFile);
+                                    } 
                                 }
                                 //create
                                 using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
@@ -367,8 +367,6 @@ namespace Iskul.Controllers
                                     System.IO.File.Delete(oldFile);
                                 }
                                 enrollVM.EnrollDetail.ConsentForm = "";
-
-
                             }
                         }
                     }
@@ -466,51 +464,7 @@ namespace Iskul.Controllers
 
         
 
-        // Enrollment Confirmation
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[ActionName("EnrollConfirmation")]
-        public async Task<IActionResult> EnrollConfirmation()
-        {
-            // we need to send confirmation email
-            //var objFromDb = _enrollHeaderRepo.FirstOrDefault(u => u.Id == EnrollVM.EnrollHeader.Id, isTracking: false);
-            //var objSchoolDb = _schoolRepo.FirstOrDefault(u => u.Id == objFromDb.SchoolId, isTracking: false);
-
-            var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
-              + "templates" + Path.DirectorySeparatorChar.ToString() +
-              "Inquiry.html";
-
-            var subject = "New Application";
-            string HtmlBody = "";
-            using (StreamReader sr = System.IO.File.OpenText(PathToTemplate))
-            {
-                HtmlBody = sr.ReadToEnd();
-            }
-
-            //Name: {0}
-            //Email: { 1}
-            //Phone: { 2}
-            //Enrollment Date: {3}
-            //School: { 4}
-
-            StringBuilder SchoolListSB = new StringBuilder();
-            //foreach (var prod in enrollVM.SchoolId)
-            //{
-            SchoolListSB.Append($" - Name: {EnrollVM.SchoolName} <span style='font-size:14px;'> (ID: {EnrollVM.SchoolId})</span><br />");
-            //}
-            string fullname = EnrollVM.EnrollHeader.FirstName + " " + EnrollVM.EnrollHeader.LastName;
-            string messageBody = string.Format(HtmlBody,
-                fullname,
-                EnrollVM.EnrollHeader.Email,
-                EnrollVM.EnrollHeader.PhoneNumber,
-                SchoolListSB.ToString());
-
-            await _emailSender.SendEmailAsync(WC.EmailAdmin, subject, messageBody);
-            //var obj = _emailSender.SendEmailAsync(WC.EmailAdmin, subject, messageBody);
-            
-            return View(EnrollVM);
-        }
-
+        
 
         //POST - SaveApplication
         [HttpPost]
@@ -543,36 +497,39 @@ namespace Iskul.Controllers
                     enrollVM.EnrollDetail.EnrollHeaderId = enrollVM.EnrollHeader.Id;
 
                     //Upload ProfilePhoto
-                    if (enrollVM.ProfileImage.Name == files[0].Name)
+
+                    if (files.Count > 0)
                     {
-                        string uploadPhoto = webRootPath + WC.ProfilePhotoPath;
-                        string fileNamePhoto = Guid.NewGuid().ToString();
-                        string extensionPhoto = Path.GetExtension(files[0].FileName);
-
-                        using (var fileStream = new FileStream(Path.Combine(uploadPhoto, fileNamePhoto + extensionPhoto), FileMode.Create))
+                        if (enrollVM.ProfileImage != null)
                         {
-                            files[0].CopyTo(fileStream);
-                        }
-                        enrollVM.EnrollDetail.SchoolPhoto = fileNamePhoto + extensionPhoto;
-                    }
-
-
-                    if (enrollVM.ConsentForm != null)
-                    {
-                        if (enrollVM.ConsentForm.Name == files[1].Name)
-                        {
-                            string upload = webRootPath + WC.ConsentForm;
-                            string fileName = Guid.NewGuid().ToString();
-                            string extension = Path.GetExtension(files[1].FileName);
-
-                            using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                            if (enrollVM.ProfileImage.Name == files[0].Name)
                             {
-                                files[1].CopyTo(fileStream);
+                                string uploadPhoto = webRootPath + WC.ProfilePhotoPath;
+                                string fileNamePhoto = Guid.NewGuid().ToString();
+                                string extensionPhoto = Path.GetExtension(files[0].FileName);
+
+                                using (var fileStream = new FileStream(Path.Combine(uploadPhoto, fileNamePhoto + extensionPhoto), FileMode.Create))
+                                {
+                                    files[0].CopyTo(fileStream);
+                                }
+                                enrollVM.EnrollDetail.SchoolPhoto = fileNamePhoto + extensionPhoto;
                             }
-
-                            enrollVM.EnrollDetail.ConsentForm = fileName + extension;
                         }
+                        if (enrollVM.ConsentForm != null)
+                        {
+                            if (enrollVM.ConsentForm.Name == files[1].Name)
+                            {
+                                string upload = webRootPath + WC.ConsentForm;
+                                string fileName = Guid.NewGuid().ToString();
+                                string extension = Path.GetExtension(files[1].FileName);
 
+                                using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                                {
+                                    files[1].CopyTo(fileStream);
+                                }
+                                enrollVM.EnrollDetail.ConsentForm = fileName + extension;
+                            }
+                        }
                     }
 
                     enrollVM.EnrollDetail.EnrollDate = DateTime.Now;
@@ -591,7 +548,7 @@ namespace Iskul.Controllers
                     try
                     {
                         _enrollHeaderRepo.FirstOrDefault(u => u.Id == enrollVM.EnrollHeader.Id, isTracking: false);
-                        // make detail record unavailable for for editing
+                        // make detail record available for for editing
                         enrollVM.EnrollHeader.DetailRecOpen = true;
                         // insert detail record ID in Header
                         enrollVM.EnrollHeader.LastDetailRec = enrollVM.EnrollDetail.Id;
@@ -619,26 +576,30 @@ namespace Iskul.Controllers
 
                     if (files.Count > 0)
                     {
-                        if (enrollVM.ProfileImage.Name == files[0].Name)
+                        if (enrollVM.ProfileImage != null)
                         {
-                            string uploadPhoto = webRootPath + WC.ProfilePhotoPath;
-                            string fileNamePhoto = Guid.NewGuid().ToString();
-                            string extensionPhoto = Path.GetExtension(files[0].FileName);
-
-                            var oldPhotoFile = Path.Combine(uploadPhoto, objFromDb.SchoolPhoto);
-
-                            //delete old file if it exists in the image folder
-
-                            if (System.IO.File.Exists(oldPhotoFile))
+                            if (enrollVM.ProfileImage.Name == files[0].Name)
                             {
-                                System.IO.File.Delete(oldPhotoFile);
+                                string uploadPhoto = webRootPath + WC.ProfilePhotoPath;
+                                string fileNamePhoto = Guid.NewGuid().ToString();
+                                string extensionPhoto = Path.GetExtension(files[0].FileName);
+
+                                var oldPhotoFile = Path.Combine(uploadPhoto, objFromDb.SchoolPhoto);
+
+                                //delete old file if it exists in the image folder
+
+                                if (System.IO.File.Exists(oldPhotoFile))
+                                {
+                                    System.IO.File.Delete(oldPhotoFile);
+                                }
+                                using (var fileStream = new FileStream(Path.Combine(uploadPhoto, fileNamePhoto + extensionPhoto), FileMode.Create))
+                                {
+                                    files[0].CopyTo(fileStream);
+                                }
+                                enrollVM.EnrollDetail.SchoolPhoto = fileNamePhoto + extensionPhoto;
                             }
-                            using (var fileStream = new FileStream(Path.Combine(uploadPhoto, fileNamePhoto + extensionPhoto), FileMode.Create))
-                            {
-                                files[0].CopyTo(fileStream);
-                            }
-                            enrollVM.EnrollDetail.SchoolPhoto = fileNamePhoto + extensionPhoto;
                         }
+                        
                         //check here if new file has been updated for an existing consent form
 
                         if (enrollVM.ConsentForm != null)
@@ -665,12 +626,30 @@ namespace Iskul.Controllers
                             }
 
                         }
+                        else
+                        {
+                            // check if consent form previously exist then delete old consent form
+                            string upload = webRootPath + WC.ConsentForm;
+                            string fileName = Guid.NewGuid().ToString();
+                            string extension = Path.GetExtension(files[1].FileName);
 
+
+                            if (objFromDb.ConsentForm != null)
+                            {
+                                var oldFile = Path.Combine(upload, objFromDb.ConsentForm);
+                                //delete old file if it exists in the Consent Form folder
+                                if (System.IO.File.Exists(oldFile))
+                                {
+                                    System.IO.File.Delete(oldFile);
+                                }
+                                enrollVM.EnrollDetail.ConsentForm = "";
+                            }
+                        }
                     }
                     else
                     {
                         enrollVM.EnrollDetail.SchoolPhoto = objFromDb.SchoolPhoto;
-                        enrollVM.EnrollDetail.ConsentForm = objFromDb.ConsentForm;
+                        enrollVM.EnrollDetail.ConsentForm = objFromDb.ConsentForm;  // old consent form will be retained even if date of birth has changed
                     }
 
                     enrollVM.EnrollDetail.EnrollStatus = WC.StatusSaved;

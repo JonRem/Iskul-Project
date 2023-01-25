@@ -41,14 +41,18 @@ namespace Iskul_Utility
         public static readonly IEnumerable<string> listStatus = new ReadOnlyCollection<string>(
             new List<string>
             {
-                StatusApproved, StatusCancelled, StatusInProcess, StatusPending, StatusRefunded, StatusShipped
+                StatusPending, StatusApproved, StatusDisapproved, StatusCancelled, StatusInProcess
             });
         public static readonly IEnumerable<string> ListCivilStatus = new ReadOnlyCollection<string>(
            new List<string>
            {
                 "Single", "Married", "Legally Separated", "Divorced", "Widow"
            });
-
+        public static readonly IEnumerable<string> AppStatus = new ReadOnlyCollection<string>(
+           new List<string>
+           {
+                "Open", "Closed"
+           });
 
     }
 }

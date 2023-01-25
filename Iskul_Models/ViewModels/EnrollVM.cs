@@ -25,7 +25,7 @@ namespace Iskul_Models.ViewModels
         public EnrollHeader EnrollHeader { get; set; }
         public EnrollDetail EnrollDetail { get; set; }
         public IEnumerable<SelectListItem> CivilStatusSelectList { get; set; }
-        [Required]
+        //[Required]
         [Display(Name ="Profile Photo")]
         public IFormFile ProfileImage { get; set; }
         [Display(Name = "Consent Form")]

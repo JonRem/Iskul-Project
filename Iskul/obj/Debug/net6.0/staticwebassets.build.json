@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "b/V4d4MtzCS1i+1r0OAY/Ew7gFsiMGPPfSARn/uicVU=",
+  "Hash": "f634B2xWV0SkgbdeGKWxLxX+9viOHV4YSZDSJ6GykDA=",
   "Source": "Iskul",
   "BasePath": "_content/Iskul",
   "Mode": "Default",
@@ -29799,23 +29799,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\ProfilePhotos\\2b1a7b2a-d0d1-43e6-b0d6-c42d857c8ffc.JPG"
-    },
-    {
-      "Identity": "C:\\Users\\jrem7_000\\Documents\\Dotnet-Core-MVC\\Iskul Project\\Iskul\\wwwroot\\images\\ProfilePhotos\\535701f2-8354-4a07-9287-8a65aa2bd507.JPG",
-      "SourceId": "Iskul",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\jrem7_000\\Documents\\Dotnet-Core-MVC\\Iskul Project\\Iskul\\wwwroot\\",
-      "BasePath": "_content/Iskul",
-      "RelativePath": "images/ProfilePhotos/535701f2-8354-4a07-9287-8a65aa2bd507.JPG",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\images\\ProfilePhotos\\535701f2-8354-4a07-9287-8a65aa2bd507.JPG"
     },
     {
       "Identity": "C:\\Users\\jrem7_000\\Documents\\Dotnet-Core-MVC\\Iskul Project\\Iskul\\wwwroot\\images\\ProfilePhotos\\5b0e139b-24ed-46a6-9bc0-15fe70d14dd8.JPG",
